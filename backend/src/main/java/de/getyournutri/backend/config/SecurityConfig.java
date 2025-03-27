@@ -11,12 +11,20 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+
+import static com.mongodb.client.model.Filters.and;
+
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    //Die standardmäßige Konfiguration von Spring Security wird überschrieben, um die Authentifizierung zu konfigurieren.
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -28,14 +36,10 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
                                 .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults());      //lässt beim Seitenaufruf ein Pop-Up erscheinen, um sich einzuloggen
+                .httpBasic(Customizer.withDefaults())
+                .cors(cors -> cors.configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()));
+
         return http.build();
     }
 
-    //Mit Bean werden Einstellungen von SpringBoot überschrieben
-    //Verschlüsselungsalgorithmus für Passwörter
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
-    }
 }

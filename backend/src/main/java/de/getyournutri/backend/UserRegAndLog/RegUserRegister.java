@@ -4,4 +4,5 @@ public record RegUserRegister(
         String username,
         String password
 ) {
+
 }

@@ -1,13 +1,13 @@
 package de.getyournutri.backend.UserRegAndLog;
 
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,13 +22,11 @@ public class RegUserService {
                 .orElseThrow(() -> new UsernameNotFoundException("Benutzer nicht gefunden"));
     }
 
-    //Überprüfen, ob Benutzer eingeloggt ist
     public RegUserResponse getLoggedInUser(){
         var principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         RegUser regUser = findByUsername(principal.getUsername());
         return new RegUserResponse(regUser.getId(), regUser.getUsername());
     }
-
     public RegUserResponse register(RegUserRegister regUserRegister) {
         RegUser regUser = new RegUser();
         regUser.setUsername(regUserRegister.username());

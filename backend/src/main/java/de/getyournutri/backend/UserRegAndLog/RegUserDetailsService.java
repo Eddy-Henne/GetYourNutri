@@ -15,7 +15,6 @@ public class RegUserDetailsService implements UserDetailsService {
 
     private final RegUserService regUserService;
 
-    //Einen Benutzer anhand des Benutzernamens finden, laden und auf authentifiziert setzen
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         RegUser regUser = regUserService.findByUsername(username);

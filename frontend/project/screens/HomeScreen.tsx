@@ -4,9 +4,8 @@ import {Text, View} from "react-native";
 import {Button} from "@react-navigation/elements";
 
 
-function HomeScreen() {
+function HomeScreen({route}) {
     const navigation = useNavigation();
-
 
     return (
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -19,6 +18,11 @@ function HomeScreen() {
                 onPress={() => navigation.navigate('Login')}
             >Go to Login
             </Button>
+            <Text style={{ margin: 10 }}>Post: {route.params?.post1}</Text>
+            <Text style={{ margin: 10 }}>Post: {route.params?.post2}</Text>
+            <Text style={{ margin: 10 }}>Post: {route.params?.post3}</Text>
+            <Text style={{ margin: 10 }}>Post: {route.params?.post4}</Text>
+
         </View>
     );
 }
