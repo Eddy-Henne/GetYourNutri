@@ -47,7 +47,7 @@ function App() {
     ]
     return(
     <>
-        <h1>Hey</h1>
+        <h1>Get Your Nutri - einkaufen, ernähren, Fitness</h1>
         {
             nutriDatabase.map(nutriDatabase=> <NutriDatabaseCard nutriDatabase={nutriDatabase} key={nutriDatabase.id} />)
         }

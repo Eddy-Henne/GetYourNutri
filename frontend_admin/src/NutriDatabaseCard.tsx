@@ -6,7 +6,7 @@ type Props ={
 
 export default function NutriDatabaseCard(props: Props) {
     return (
-        <div>
+        <div className="nutriDatabase-card">
             {props.nutriDatabase.name}
         </div>
     );
