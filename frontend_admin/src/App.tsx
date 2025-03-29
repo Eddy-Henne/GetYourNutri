@@ -1,50 +1,22 @@
 import {NutriDatabase} from "./NutriDatabase.ts";
 import NutriDatabaseCard from "./NutriDatabaseCard.tsx";
+import {useEffect, useState} from "react";
+import axios from "axios";
 
 function App() {
 
-    const nutriDatabase: NutriDatabase[] = [
-        {
-            id: 1,
-            name: 'Pão de queijo',
-            calories: 200,
-            proteins: 10,
-            fats: 5,
-            carbohydrates: 30
-        },
-        {
-            id: 2,
-            name: 'Coxinha',
-            calories: 300,
-            proteins: 20,
-            fats: 10,
-            carbohydrates: 40
-        },
-        {
-            id: 3,
-            name: 'Bolo de cenoura',
-            calories: 400,
-            proteins: 30,
-            fats: 15,
-            carbohydrates: 50
-        },
-        {
-            id: 4,
-            name: 'Brigadeiro',
-            calories: 500,
-            proteins: 40,
-            fats: 20,
-            carbohydrates: 60
-        },
-        {
-            id: 5,
-            name: 'Café',
-            calories: 100,
-            proteins: 5,
-            fats: 2,
-            carbohydrates: 15
-        }
-    ]
+    const [nutriDatabase, setNutriDatabase] = useState<NutriDatabase[]>();
+
+    useEffect(() => {
+        axios.get("/api/nutri")
+            .then(response => {setNutriDatabase(response.data)})
+        }, []
+    )
+
+    if (!nutriDatabase) {
+        return "Lade...";
+    }
+
     return(
     <>
         <h1>Get Your Nutri - einkaufen, ernähren, Fitness</h1>
