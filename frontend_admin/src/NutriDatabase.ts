@@ -1,8 +1,17 @@
 export type NutriDatabase = {
-    id: number,
-    name: string,
-    calories: number,
-    proteins: number,
-    fats: number,
-    carbohydrates: number,
+    id: string
+    barcode: string
+    name: string
+
+    marke: string
+    supermarkt: string
+    kategorie: string
+    essbar: string
+
+    energie: string
+    fett: string
+    fettsaeuren: string
+    kohlenhydrate: string
+    zucker: string
+    eiweiss: string
 }

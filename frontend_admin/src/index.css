@@ -1,3 +1,5 @@
+
+
 body {
   font-family: 'Roboto', sans-serif;
   margin: 0;
@@ -5,16 +7,531 @@ body {
   background-color: #f5f5f5;
 }
 
+.container {
+  display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  padding: 20px;
+}
+
 .nutriDatabase-card {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  width: 15%;
-  height: 100%;
+  width: 13%;
+
+  height: 17px;
   padding: 1rem;
   border-radius: 1rem;
   box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-  margin-bottom: 10px;
+  background: linear-gradient(135deg, #f1c6d7, #a1c6f5);
+  margin-bottom: 3px;
+  margin-top: 10px;
+  margin-left: 10px;
+  font-size: 14px;
 }
+
+.nutriDatabase-card h2 {
+  font-size: 16px; /* Kleinere Schriftgröße für den Titel */
+  margin-right: 30px; /* Abstand zwischen dem Text und dem Button */
+}
+
+.expand-button {
+  cursor: pointer;
+  font-size: 20px; /* Die Größe des Icons */
+  padding: 5px 10px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  margin-left: auto;
+  transition: background-color 0.3s ease;
+}
+
+.neues-objekt-button{
+  cursor: pointer;
+  font-size: 20px; /* Die Größe des Icons */
+  padding: 5px 10px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  margin-left: auto;
+  margin-top: -25px;
+  transition: background-color 0.3s ease;
+
+}
+
+.neues-objekt-text{
+margin-top: -25px;
+  margin-left: 10px;
+}
+
+.neues-objekt-navigation-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+
+}
+
+.expand-button:hover {
+  background-color: #2980b9;
+}
+
+.expand-button .fa-file-lines {
+  color: white; /* Optional: Farbe des Icons */
+}
+
+/* Modal-Overlay (Hintergrund des Modals) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-overlay2 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+}
+
+.modal-content p {
+  margin-bottom: -8px; /* Kleinerer Abstand zwischen den Input-Feldern und den Texten */
+  padding: 2px; /* Verringere das Padding, wenn nötig */
+}
+
+/* Modal-Inhalt */
+.modal-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 0.4fr 0.4fr 0.4fr 0.2fr;
+  grid-template-rows: auto 1fr;
+  gap: 1px;
+  align-items: center;
+}
+
+.modal-content2 {
+  display: flex;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  width: 100%;
+  gap: 1px;
+  align-items: center;
+}
+
+.modal-content h3 {
+  grid-column: 1 / span 4; /* Damit das h3 über alle 4 Spalten geht */
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.input-field input {
+  width: 100%; /* Das Eingabefeld nimmt die gesamte Breite seines Containers ein */
+  height: 40px; /* Höhe des Eingabefelds erhöhen */
+  padding: 10px; /* Innenabstand (Padding) für mehr Platz im Eingabefeld */
+  font-size: 16px; /* Größere Schrift für bessere Lesbarkeit */
+  border: 2px solid #ccc; /* Graue Rahmenfarbe */
+  border-radius: 8px; /* Abgerundete Ecken */
+  outline: none; /* Kein Standard-Fokusrahmen */
+  box-sizing: border-box; /* Sicherstellen, dass Padding und Border zur Gesamtbreite des Elements zählen */
+  transition: all 0.3s ease; /* Sanfte Übergänge bei Interaktionen */
+  margin-bottom: 15px;
+}
+
+.input-field input:focus {
+  border-color: #007BFF; /* Blaue Rahmenfarbe, wenn das Eingabefeld fokussiert ist */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Leichter Schatten bei Fokus */
+}
+
+.modal-content div {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-buttons {
+  display: flex;
+  flex-direction: column;
+    gap: 10px;
+}
+
+.modal-buttons2 {
+  display: flex;
+  gap: 10px;
+
+}
+
+.save-btn, .edit-btn, .delete-btn, .close-modal-btn {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.save-btn:hover, .edit-btn:hover, .delete-btn:hover, .close-modal-btn {
+  background-color: #0056b3;
+}
+
+.close-modal-btn:hover {
+  background-color: #e33;
+}
+
+.editable-text {
+  cursor: pointer; /* Zeigt an, dass dieses Element klickbar ist */
+  color: #333; /* Normale Textfarbe */
+}
+
+.editable-text:hover {
+  color: #007bff; /* Beispiel für eine Hover-Farbe, um es hervorzuheben */
+}
+
+h1 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 3rem;
+  color: #333;
+  text-align: center; /* Zentriert den Textinhalt */
+  margin: 0 auto; /* Zentriert das Element */
+  margin-bottom: 0rem;
+  margin-top: 0rem;
+}
+
+.nav-container {
+  display: flex;
+  justify-content: center; /* Verteilt den Platz gleichmäßig zwischen den Elementen */
+  align-items: center; /* Vertikale Ausrichtung der Elemente */
+  gap: 105px; /* Abstand zwischen den Elementen */
+  margin-bottom: 7px; /* Abstand nach unten */
+  margin-top: 10px;
+}
+
+
+.nav-container > div {
+  display: flex;
+  align-items: center; /* Vertikale Ausrichtung der Elemente in jedem div */
+  gap: 36px; /* Abstand zwischen den Elementen innerhalb des divs */
+}
+
+.nav-container select, .nav-container input {
+  padding: 5px;
+  font-size: 1rem;
+  margin-top: -22px;
+}
+
+.nav-container > div select {
+  flex: 2; /* Kategorieauswahl dehnt sich aus und bekommt mehr Platz */
+  margin-right: 10px; /* Etwas Abstand zum Suchfeld */
+}
+
+.nav-container-wrapper::after {
+  content: '';
+  display: block;
+  width: 100%;
+  border-bottom: 8px solid #f3f3ef; /* Graue Linie */
+  box-shadow: 0 7px 12px rgba(0, 0, 0, 1.2);
+  border-radius: 4px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  animation: pulse 0.5s ease-in 1;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scaleX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+/* Verstecke die Standard-Radiobuttons */
+input[type="radio"] {
+  display: none;
+}
+
+/* Container für die benutzerdefinierten Radiobuttons */
+.radio-container {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  margin-bottom: 17px;
+}
+
+/* Stil für das Label */
+.custom-radio {
+  position: relative;
+  cursor: pointer;
+  font-size: 18px;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+/* Benutzerdefiniertes Aussehen des Radiobuttons */
+.custom-radio::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 15px;
+  border: 2px solid #3498db; /* Standard-Farbe */
+  border-radius: 50%;
+  background-color: #3498db;
+  transition: all 0.3s ease; /* Sanfte Übergänge */
+}
+
+/* Wenn der Radiobutton ausgewählt ist */
+#name:checked + .custom-radio::before {
+  background-color: #2ecc71; /* Blau bei Auswahl */
+  border-color: #3498db;
+  transform: translateY(-50%) scale(1.2); /* Vergrößert den Kreis */
+}
+
+#kategorie:checked + .custom-radio::before {
+  background-color: #2ecc71; /* Blau bei Auswahl */
+  border-color: #3498db;
+  transform: translateY(-50%) scale(1.2); /* Vergrößert den Kreis */
+}
+
+#barcode:checked + .custom-radio::before {
+  background-color: #2ecc71; /* Blau bei Auswahl */
+  border-color: #3498db;
+  transform: translateY(-50%) scale(1.2); /* Vergrößert den Kreis */
+}
+
+
+/* Wenn der Radiobutton aktiviert ist, füge einen Punkt hinzu */
+#name:checked + .custom-radio::after,
+#kategorie:checked + .custom-radio::after,
+#barcode:checked + .custom-radio::after {
+  content: '';
+  position: absolute;
+  left: -14.3px;
+  top: 10.5px;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 15px;
+  background-color: #bee33a;
+  border-radius: 100%;
+}
+
+/* Bei Hover den Radiobutton größer machen */
+.custom-radio:hover::before {
+  transform: translateY(-50%) scale(1.2);
+}
+
+/* Text neben dem Radiobutton */
+.custom-radio span {
+  margin-left: 10px; /* Abstand zwischen dem Radiobutton und dem Text */
+}
+
+/* Stil für das Suchfeld */
+input[type="text"] {
+  padding: 10px 15px;
+  font-size: 13px;
+  border: 2px solid #ccc;
+  border-radius: 25px; /* Abgerundete Ecken */
+  width: 200px;
+
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Beim Fokus - Suchfeld leuchtet auf */
+input[type="text"]:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
+  outline: none; /* Entfernt die Standard-Fokus-Kontur */
+}
+
+/* Stil für das Dropdown-Menü */
+select {
+  padding: 12px 15px;
+  font-size: 20px;
+  border: 2px solid #ccc;
+  border-radius: 25px; /* Abgerundete Ecken */
+  background-color: #f8f8f8;
+  appearance: none; /* Entfernt die Standard-Dropdown-Pfeile */
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+select:focus {
+  border-color: #3498db;
+  background-color: #e9f7fd;
+  border-radius: 25px; /* Abgerundete Ecken */
+  outline: none;
+}
+
+/* Hauptbereich - body */
+body {
+  background-image: url('/images/body-background.png');  /* Pfad zum Bild im public Ordner */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  margin: 3px;
+  font-family: Arial, sans-serif;
+}
+
+/* Headerbereich */
+.nav-container-wrapper {
+  background-image: url('/images/header-background.png');  /* Pfad zum Bild im public Ordner */
+  background-size: 120% auto;
+  background-position: 0px center;
+  background-attachment: scroll;
+  height: 240px;
+
+  color: white;
+  background-repeat: no-repeat;
+}
+.header-container {
+  width: 100%;
+  height: 180px; /* Stelle sicher, dass der Header eine Höhe hat, die genug Platz für das Bild bietet */
+  background-image: url('/images/Icon transparent get your nutri.png'); /* Dein Bildpfad hier */
+  background-position: left;
+  background-size: 10%; /* Bild skalieren, sodass es den gesamten Container ausfüllt */
+  background-repeat: no-repeat; /* Verhindert das Wiederholen des Bildes */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  padding: 0; /* Entfernt zusätzliche Ränder */
+}
+
+./* Modal-Overlay: Hintergrund abdunkeln und Modal zentrieren */
+.add-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Dunkler Overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal-Inhalt: Positionierung in der Mitte */
+.add-modal-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 580px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Überschrift über dem Grid */
+.add-modal-content h2 {
+  text-align: center;
+  margin-bottom: 3rem;
+  margin-top: -1rem;
+  color: black;
+}
+
+/* Grid-Layout für Labels, Eingabefelder und Buttons */
+.add-modal-form {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr; /* Labels (1) | Eingabefelder (2) | Buttons (1) */
+  column-gap: 2rem;
+
+}
+
+/* Labels: Erste Spalte, vertikal ausgerichtet */
+.add-modal-labels {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Rechtsbündige Labels */
+  text-align: left;
+  gap: 1rem;
+  color: black;
+  font-size: 1.2rem;
+  margin-top: -1.1rem;
+  padding-right: -1rem;
+}
+
+/* Eingabefelder: Zweite Spalte, vertikal untereinander */
+.add-modal-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  margin-left: -1rem;
+}
+
+/* Eingabefelder Stil */
+.add-modal-inputs input {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+/* Buttons: Dritte Spalte, vertikal untereinander */
+.add-modal-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  align-items: flex-end;
+  justify-content: center; /* Buttons oben in der Spalte */
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: -1rem;
+}
+
+/* Button-Stil */
+.add-modal-buttons button {
+  width: 100%;
+  max-width: 150px;
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  background-color: #4CAF50;
+  color: black;
+  font-size: 1.2rem;
+  cursor: pointer;
+  text-align: center;
+}
+
+.add-modal-buttons button:hover {
+  background-color: #45a049;
+}
+
+
