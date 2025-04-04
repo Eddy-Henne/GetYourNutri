@@ -14,6 +14,7 @@ type Props = {
     setSelectedCategory: (category: string) => void;
     searchTerm: string;
     setSearchTerm: (term: string) => void;
+    refreshNutris: () => void;
 };
 
 export default function Navigation(props: Props) {
@@ -60,9 +61,25 @@ export default function Navigation(props: Props) {
                     "Content-Type": "application/json",
                 },
             });
-
             console.log("Erfolgreich gespeichert:", response.data);
-            closeAddModal(); // Schließt das Modal nach dem Speichern
+
+            setFormData({
+                barcode: '',
+                name: '',
+                marke: '',
+                supermarkt: '',
+                kategorie: '',
+                essbar: '',
+                energie: '',
+                fett: '',
+                fettsaeuren: '',
+                kohlenhydrate: '',
+                zucker: '',
+                eiweiss: ''
+            });
+
+            closeAddModal();
+            props.refreshNutris();
         } catch (error) {
             console.error("Fehler beim Speichern:", error);
         }
@@ -144,8 +161,6 @@ export default function Navigation(props: Props) {
                     onChange={(e) => props.setSearchTerm(e.target.value)}
                 />
             </div>
-
-
                 <div>
                     <div className="neues-objekt-navigation-container">
                     <button onClick={openAddModal} className="neues-objekt-button">
@@ -198,6 +213,22 @@ export default function Navigation(props: Props) {
                                 <div className="add-modal-buttons">
                                     <button onClick={handleCreateObject}>Erstellen</button>
                                     <button onClick={closeAddModal}>Schließen</button>
+                                    <button onClick={() => setFormData({
+                                        barcode: '',
+                                        name: '',
+                                        marke: '',
+                                        supermarkt: '',
+                                        kategorie: '',
+                                        essbar: '',
+                                        energie: '',
+                                        fett: '',
+                                        fettsaeuren: '',
+                                        kohlenhydrate: '',
+                                        zucker: '',
+                                        eiweiss: ''
+                                    })}>
+                                        Zurücksetzen
+                                    </button>
                                 </div>
                                 </div>
                             </div>

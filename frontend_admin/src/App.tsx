@@ -8,28 +8,39 @@ import NutriDatabaseMapping from "./NutriDatabaseMapping.tsx";
 import LoginPage from "./LoginPage.tsx";
 import RegisterPage from "./RegisterPage.tsx";
 
-
 function App() {
 
     const [nutriDatabases, setNutriDatabases] = useState<NutriDatabase[]>([]);
     const [selectedSort, setSelectedSort] = useState<string>('name');
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [searchTerm, setSearchTerm] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    useEffect(() => {
-        axios.get("/api/nutri", {
-            withCredentials: true
-        })
+    // 💡 Items laden und aktualisieren
+
+    const fetchNutris = () => {
+        setIsLoading(true);
+        const minLoadingTime = new Promise(resolve => setTimeout(resolve, 800));
+
+        const dataFetch = axios.get("/api/nutri")
             .then(response => {
                 setNutriDatabases(response.data);
             })
             .catch((error) => {
-                console.error('Error fetching data:', error);
-            });
+                console.error('Fehler beim Laden der Daten:', error);
+            })
+            Promise.all([minLoadingTime, dataFetch]).then(() => {
+                setIsLoading(false);
+        });
+    };
+
+    // useEffect lädt beim ersten Start die Daten
+    useEffect(() => {
+        fetchNutris(); // 🔁 Hier wird die neue Funktion aufgerufen
     }, []);
 
-    if (!Array.isArray(nutriDatabases) || nutriDatabases.length === 0) {
-        return <p>Lade...</p>;
+    if (nutriDatabases.length === 0) {
+        return "Lade...";
     }
 
     const categories = nutriDatabases.length > 0
@@ -69,7 +80,18 @@ function App() {
                 setSelectedCategory={setSelectedCategory}
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
+                refreshNutris={fetchNutris}
             />
+
+
+                {isLoading && (
+                    <div className="overlay-backdrop">
+                    <div className="loader-overlay">
+                        <div className="loader-spinner">
+                        </div>
+                        <p>Speichern...</p>
+                    </div>
+                    </div>)}
             <NutriDatabaseMapping
                 selectedSort={selectedSort}
                 filteredNutriDatabases={filteredNutriDatabases}
