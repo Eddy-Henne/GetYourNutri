@@ -6,6 +6,8 @@ import './index.css';
 import {Route, Routes} from "react-router-dom";
 import NutriDatabaseMapping from "./NutriDatabaseMapping.tsx";
 import LoginPage from "./LoginPage.tsx";
+import RegisterPage from "./RegisterPage.tsx";
+
 
 function App() {
 
@@ -15,7 +17,9 @@ function App() {
     const [searchTerm, setSearchTerm] = useState<string>('');
 
     useEffect(() => {
-        axios.get("/api/nutri")
+        axios.get("/api/nutri", {
+            withCredentials: true
+        })
             .then(response => {
                 setNutriDatabases(response.data);
             })
@@ -24,8 +28,8 @@ function App() {
             });
     }, []);
 
-    if (nutriDatabases.length === 0) {
-        return "Lade...";
+    if (!Array.isArray(nutriDatabases) || nutriDatabases.length === 0) {
+        return <p>Lade...</p>;
     }
 
     const categories = nutriDatabases.length > 0
@@ -73,8 +77,7 @@ function App() {
             </>
         }/>
         <Route path={"/login"} element={<LoginPage/>}/>
-
-        
+        <Route path={"/register"} element={<RegisterPage/>}/>
 
     </Routes>
 
