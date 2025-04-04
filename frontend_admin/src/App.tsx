@@ -1,16 +1,15 @@
 import {NutriDatabase} from "./NutriDatabase.ts";
-import NutriDatabaseCard from "./NutriDatabaseCard.tsx";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import Navigation from "./Navigation.tsx";
 import './index.css';
-
-
+import {Route, Routes} from "react-router-dom";
+import NutriDatabaseMapping from "./NutriDatabaseMapping.tsx";
+import LoginPage from "./LoginPage.tsx";
 
 function App() {
 
     const [nutriDatabases, setNutriDatabases] = useState<NutriDatabase[]>([]);
-
     const [selectedSort, setSelectedSort] = useState<string>('name');
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -29,26 +28,18 @@ function App() {
         return "Lade...";
     }
 
-
     const categories = nutriDatabases.length > 0
         ? Array.from(new Set(nutriDatabases.map(item => item.kategorie)))
         : [];
 
-
-    const filteredData = nutriDatabases
+    const filteredNutriDatabases = nutriDatabases
         .filter(item => {
-            // Filtere nach Kategorie
             if (selectedCategory && item.kategorie !== selectedCategory) return false;
-            // Filtere nach Suchbegriff
-            if (
-                !item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            return !(!item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
                 !item.kategorie.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                !item.barcode.includes(searchTerm)
-            ) return false;
-            return true;
+                !item.barcode.includes(searchTerm));
         })
         .sort((a, b) => {
-            // Sortierung basierend auf dem ausgewählten Wert (name, kategorie, barcode)
             if (selectedSort === 'name') {
                 return a.name.localeCompare(b.name);
             }
@@ -61,15 +52,11 @@ function App() {
             return 0;
         });
 
-
-
     return(
-    <>
 
-            <title>Get Your Nutri</title>
-
-
-        <div>
+    <Routes>
+        <Route path={"/"} element={
+            <>
             <Navigation
                 categories={categories}
                 selectedSort={selectedSort}
@@ -79,24 +66,19 @@ function App() {
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
             />
-        </div>
-        <div className="container">
-            {nutriDatabases
-                .filter(item => {
-                    if (selectedCategory && item.kategorie !== selectedCategory) return false;
-                    if (
-                        !item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                        !item.kategorie.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                        !item.barcode.includes(searchTerm)
-                    ) return false;
-                    return true;
-                })
-                .map((nutriItem) => (
-                    <NutriDatabaseCard key={nutriItem.id} nutriDatabase={nutriItem} selectedSort={selectedSort} />
-                ))}
-        </div>
-    </>
-    )
+            <NutriDatabaseMapping
+                selectedSort={selectedSort}
+                filteredNutriDatabases={filteredNutriDatabases}
+            />
+            </>
+        }/>
+        <Route path={"/login"} element={<LoginPage/>}/>
+
+        
+
+    </Routes>
+
+            );
 }
 
 export default App
