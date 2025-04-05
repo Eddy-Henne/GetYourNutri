@@ -82,8 +82,6 @@ function App() {
                 setSearchTerm={setSearchTerm}
                 refreshNutris={fetchNutris}
             />
-
-
                 {isLoading && (
                     <div className="overlay-backdrop">
                     <div className="loader-overlay">
@@ -95,7 +93,10 @@ function App() {
             <NutriDatabaseMapping
                 selectedSort={selectedSort}
                 filteredNutriDatabases={filteredNutriDatabases}
+                reloadData={fetchNutris}
             />
+
+
             </>
         }/>
         <Route path={"/login"} element={<LoginPage/>}/>

@@ -2,27 +2,22 @@ import {NutriDatabase} from "./NutriDatabase.ts";
 import {useEffect, useState} from "react";
 import * as React from "react";
 import axios from "axios";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFileLines } from '@fortawesome/free-solid-svg-icons';
-
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faFileLines} from '@fortawesome/free-solid-svg-icons';
 
 type Props = {
-    nutriDatabase: NutriDatabase;
     selectedSort: string;
-    onDelete: (id: string) => void;
-    onUpdate: (id: string, updatedData: NutriDatabase) => void;
+    nutriDatabase: NutriDatabase;
+    reloadData: () => void;
 };
 
 export default function NutriDatabaseCard(props: Props) {
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editedNutri, setEditedNutri] = useState(props.nutriDatabase);
     const [inputField, setInputField] = useState(false);
     const [editingField, setEditingField] = useState<string | null>(null);
     const [isFocused, setIsFocused] = useState(false);
-
-    const username = 'admin';  // Dein Benutzername
-    const password = 'admin';  // Dein Passwort
-    const authHeader = 'Basic ' + btoa(`${username}:${password}`);
 
     const displayValue = props.selectedSort === 'name'
         ? props.nutriDatabase.name
@@ -63,23 +58,32 @@ export default function NutriDatabaseCard(props: Props) {
     const handleSaveClick = async () => {
         try {
             const response = await axios.put(
-                `/api/nutri/${editedNutri.id}`,  // Die URL für den PUT-Request
-                editedNutri,  // Die zu aktualisierenden Daten
+                `/api/nutri/${editedNutri.id}`,
+                editedNutri,
                 {
                     headers: {
-                        'Authorization': authHeader,  // Basic Auth Header
-                        'Content-Type': 'application/json',  // Den Content-Type für JSON
+                        'Content-Type': 'application/json',
                     },
                 }
             );
             console.log('Update erfolgreich:', response.data);
-            props.onUpdate(editedNutri.id, editedNutri);  // Optional: Daten nach Update verarbeiten
+            props.reloadData();
+            closeInputField();
         } catch (error) {
             console.error('Fehler beim Update:', error);
         }
     };
-    const handleDeleteClick = () => {
-        props.onDelete(props.nutriDatabase.id);  // Löschen des Objekts
+
+    const handleDeleteClick = async () => {
+        console.log("🗑 Löschen wurde ausgelöst!");
+        try {
+            await axios.delete(`/api/nutri/${props.nutriDatabase.id}`, {
+            });
+            props.reloadData();
+            closeModal();
+        } catch (error) {
+            console.error("Fehler beim Löschen:", error);
+        }
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, field: string) => {
@@ -107,15 +111,17 @@ export default function NutriDatabaseCard(props: Props) {
         }
     };
 
-
-
     return (
-        <div className="nutriDatabase-card">
-            <h2>{displayValue}</h2>
+        <>
+            <title>Get Your Nutri</title>
 
-            <button onClick={openModal} className="expand-button">
-                <FontAwesomeIcon icon={faFileLines} />{/* Zeigt den nach unten gerichteten Pfeil */}
-            </button>
+            <div className="nutriDatabase-card">
+                <h2>{displayValue}</h2>
+
+                <button onClick={openModal} className="expand-button">
+                    <FontAwesomeIcon icon={faFileLines}/>
+                </button>
+            </div>
 
             {isModalOpen && (
                 <div className="modal-overlay" onClick={handleOverlayClick}>
@@ -124,7 +130,6 @@ export default function NutriDatabaseCard(props: Props) {
 
                         {/* Grid: 1. Spalte */}
                         <div>
-
                             <p><strong>Barcode</strong></p>
                             <p><strong>Name</strong></p>
                             <p><strong>Marke</strong></p>
@@ -142,357 +147,36 @@ export default function NutriDatabaseCard(props: Props) {
                         {/* Grid: 2. Spalte */}
 
                         <div>
-                            <div
-                                onClick={() => openInputField("barcode")}
-                                className="editable-text">
-                                <p>{props.nutriDatabase.barcode}</p>
-                            </div>
-
-                                {inputField && editingField === "barcode" && (
-                                <div className="modal-overlay2" onClick={handleOverlayClick2}>
-                                    <div className="modal-content2">
-                                        <div className="input-field">
-                                            <input
-                                            type="text"
-                                            value={editedNutri.barcode}
-                                            onFocus={handleFocus}
-                                            onBlur={handleBlur}
-                                            onChange={(e) => handleInputChange(e, "barcode")}
-                                            />
+                            {(Object.keys(editedNutri) as (keyof NutriDatabase)[])
+                                .filter((field) => field !== "id")
+                                .map((field) => (
+                                <React.Fragment key={field}>
+                                    <div onClick={() => openInputField(field)} className="editable-text">
+                                        <p>{props.nutriDatabase[field]}</p>
                                     </div>
-                                        <div className="modal-buttons2">
-                                            <button
-                                                onClick={handleSaveClick} className="save-btn">Speichern
-                                            </button>
-                                            <button
-                                                onClick={closeInputField} className="close-modal-btn">Schließen
-                                            </button>
+
+                                    {inputField && editingField === field && (
+                                        <div className="modal-overlay2" onClick={handleOverlayClick2}>
+                                            <div className="modal-content2">
+                                                <div className="input-field">
+                                                    <input
+                                                        type="text"
+                                                        value={editedNutri[field] ?? ""}
+                                                        onChange={(e) => handleInputChange(e, field)}
+                                                        onFocus={field === "barcode" ? handleFocus : undefined}
+                                                        onBlur={field === "barcode" ? handleBlur : undefined}
+                                                    />
+                                                </div>
+                                                <div className="modal-buttons2">
+                                                    <button onClick={handleSaveClick} className="save-btn">Speichern</button>
+                                                    <button onClick={closeInputField} className="close-modal-btn">Schließen</button>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>)}
-
-
-                            <div
-                                onClick={() =>openInputField("name")}
-                                className={"editable-text"}>
-                                <p>{props.nutriDatabase.name}</p>
-                            </div>
-
-                            {inputField && editingField === "name" && (
-                                <div className="modal-overlay2" onClick={handleOverlayClick2}>
-                                    <div className="modal-content2">
-                                        <div className="input-field">
-                                        <input
-                                            type="text"
-                                            value={editedNutri.name}
-                                            onFocus={handleFocus}
-                                            onBlur={handleBlur}
-                                            onChange={(e) => handleInputChange(e, "name")}
-                                        />
-                                        </div>
-                                        <div className="modal-buttons2">
-                                            <button
-                                                onClick={handleSaveClick} className="save-btn">Speichern
-                                            </button>
-                                            <button
-                                                onClick={closeInputField} className="close-modal-btn">Schließen
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>)}
-
-                            <div
-                                onClick={() =>openInputField("marke")}
-                                className={"editable-text"}>
-                                <p>{props.nutriDatabase.marke}</p>
-                            </div>
-
-                            {inputField && editingField === "marke" && (
-                                <div className="modal-overlay2" onClick={handleOverlayClick2}>
-                                    <div className="modal-content2">
-                                        <div className="input-field">
-                                            <input
-                                                type="text"
-                                                value={editedNutri.marke}
-                                                onFocus={handleFocus}
-                                                onBlur={handleBlur}
-                                                onChange={(e) => handleInputChange(e, "marke")}
-                                            />
-                                        </div>
-                                        <div className="modal-buttons2">
-                                            <button
-                                                onClick={handleSaveClick} className="save-btn">Speichern
-                                            </button>
-                                            <button
-                                                onClick={closeInputField} className="close-modal-btn">Schließen
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>)}
-
-                            <div
-                                onClick={() =>openInputField("supermarkt")}
-                                className={"editable-text"}>
-                                <p>{props.nutriDatabase.supermarkt}</p>
-                            </div>
-
-                            {inputField && editingField === "supermarkt" && (
-                                <div className="modal-overlay2" onClick={handleOverlayClick2}>
-                                    <div className="modal-content2">
-                                        <div className="input-field">
-                                            <input
-                                                type="text"
-                                                value={editedNutri.supermarkt}
-                                                onFocus={handleFocus}
-                                                onBlur={handleBlur}
-                                                onChange={(e) => handleInputChange(e, "supermarkt")}
-                                            />
-                                        </div>
-                                        <div className="modal-buttons2">
-                                            <button
-                                                onClick={handleSaveClick} className="save-btn">Speichern
-                                            </button>
-                                            <button
-                                                onClick={closeInputField} className="close-modal-btn">Schließen
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>)}
-
-                            <div
-                                onClick={() =>openInputField("kategorie")}
-                                className={"editable-text"}>
-                                <p>{props.nutriDatabase.kategorie}</p>
-                            </div>
-
-                            {inputField && editingField === "kategorie" && (
-                                <div className="modal-overlay2" onClick={handleOverlayClick2}>
-                                    <div className="modal-content2">
-                                        <div className="input-field">
-                                            <input
-                                                type="text"
-                                                value={editedNutri.kategorie}
-                                                onFocus={handleFocus}
-                                                onBlur={handleBlur}
-                                                onChange={(e) => handleInputChange(e, "kategorie")}
-                                            />
-                                        </div>
-                                        <div className="modal-buttons2">
-                                            <button
-                                                onClick={handleSaveClick} className="save-btn">Speichern
-                                            </button>
-                                            <button
-                                                onClick={closeInputField} className="close-modal-btn">Schließen
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>)}
-
-                            <div
-                                onClick={() =>openInputField("essbar")}
-                                className={"editable-text"}>
-                                <p>{props.nutriDatabase.essbar}</p>
-                            </div>
-
-                            {inputField && editingField === "essbar" && (
-                                <div className="modal-overlay2" onClick={handleOverlayClick2}>
-                                    <div className="modal-content2">
-                                        <div className="input-field">
-                                            <input
-                                                type="text"
-                                                value={editedNutri.essbar}
-                                                onFocus={handleFocus}
-                                                onBlur={handleBlur}
-                                                onChange={(e) => handleInputChange(e, "essbar")}
-                                            />
-                                        </div>
-                                        <div className="modal-buttons2">
-                                            <button
-                                                onClick={handleSaveClick} className="save-btn">Speichern
-                                            </button>
-                                            <button
-                                                onClick={closeInputField} className="close-modal-btn">Schließen
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>)}
-
-                            <div
-                                onClick={() =>openInputField("energie")}
-                                className={"editable-text"}>
-                                <p>{props.nutriDatabase.energie}</p>
-                            </div>
-
-                            {inputField && editingField === "energie" && (
-                                <div className="modal-overlay2" onClick={handleOverlayClick2}>
-                                    <div className="modal-content2">
-                                        <div className="input-field">
-                                            <input
-                                                type="text"
-                                                value={editedNutri.energie}
-                                                onFocus={handleFocus}
-                                                onBlur={handleBlur}
-                                                onChange={(e) => handleInputChange(e, "energie")}
-                                            />
-                                        </div>
-                                        <div className="modal-buttons2">
-                                            <button
-                                                onClick={handleSaveClick} className="save-btn">Speichern
-                                            </button>
-                                            <button
-                                                onClick={closeInputField} className="close-modal-btn">Schließen
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>)}
-
-                            <div
-                                onClick={() =>openInputField("fett")}
-                                className={"editable-text"}>
-                                <p>{props.nutriDatabase.fett}</p>
-                            </div>
-
-                            {inputField && editingField === "fett" && (
-                                <div className="modal-overlay2" onClick={handleOverlayClick2}>
-                                    <div className="modal-content2">
-                                        <div className="input-field">
-                                            <input
-                                                type="text"
-                                                value={editedNutri.fett}
-                                                onFocus={handleFocus}
-                                                onBlur={handleBlur}
-                                                onChange={(e) => handleInputChange(e, "fett")}
-                                            />
-                                        </div>
-                                        <div className="modal-buttons2">
-                                            <button
-                                                onClick={handleSaveClick} className="save-btn">Speichern
-                                            </button>
-                                            <button
-                                                onClick={closeInputField} className="close-modal-btn">Schließen
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>)}
-
-                            <div
-                                onClick={() =>openInputField("fettsaeuren")}
-                                className={"editable-text"}>
-                                <p>{props.nutriDatabase.fettsaeuren}</p>
-                            </div>
-
-                            {inputField && editingField === "fettsaeuren" && (
-                                <div className="modal-overlay2" onClick={handleOverlayClick2}>
-                                    <div className="modal-content2">
-                                        <div className="input-field">
-                                            <input
-                                                type="text"
-                                                value={editedNutri.fettsaeuren}
-                                                onFocus={handleFocus}
-                                                onBlur={handleBlur}
-                                                onChange={(e) => handleInputChange(e, "fettsaeuren")}
-                                            />
-                                        </div>
-                                        <div className="modal-buttons2">
-                                            <button
-                                                onClick={handleSaveClick} className="save-btn">Speichern
-                                            </button>
-                                            <button
-                                                onClick={closeInputField} className="close-modal-btn">Schließen
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>)}
-
-                            <div
-                                onClick={() =>openInputField("kohlenhydrate")}
-                                className={"editable-text"}>
-                                <p>{props.nutriDatabase.kohlenhydrate}</p>
-                            </div>
-
-                            {inputField && editingField === "kohlenhydrate" && (
-                                <div className="modal-overlay2" onClick={handleOverlayClick2}>
-                                    <div className="modal-content2">
-                                        <div className="input-field">
-                                            <input
-                                                type="text"
-                                                value={editedNutri.kohlenhydrate}
-                                                onFocus={handleFocus}
-                                                onBlur={handleBlur}
-                                                onChange={(e) => handleInputChange(e, "kohlenhydrate")}
-                                            />
-                                        </div>
-                                        <div className="modal-buttons2">
-                                            <button
-                                                onClick={handleSaveClick} className="save-btn">Speichern
-                                            </button>
-                                            <button
-                                                onClick={closeInputField} className="close-modal-btn">Schließen
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>)}
-
-                            <div
-                                onClick={() =>openInputField("zucker")}
-                                className={"editable-text"}>
-                                <p>{props.nutriDatabase.zucker}</p>
-                            </div>
-
-                            {inputField && editingField === "zucker" && (
-                                <div className="modal-overlay2" onClick={handleOverlayClick2}>
-                                    <div className="modal-content2">
-                                        <div className="input-field">
-                                            <input
-                                                type="text"
-                                                value={editedNutri.zucker}
-                                                onFocus={handleFocus}
-                                                onBlur={handleBlur}
-                                                onChange={(e) => handleInputChange(e, "zucker")}
-                                            />
-                                        </div>
-                                        <div className="modal-buttons2">
-                                            <button
-                                                onClick={handleSaveClick} className="save-btn">Speichern
-                                            </button>
-                                            <button
-                                                onClick={closeInputField} className="close-modal-btn">Schließen
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>)}
-
-                            <div
-                                onClick={() =>openInputField("eiweiss")}
-                                className={"editable-text"}>
-                                <p>{props.nutriDatabase.eiweiss}</p>
-                            </div>
-
-                            {inputField && editingField === "eiweiss" && (
-                                <div className="modal-overlay2" onClick={handleOverlayClick2}>
-                                    <div className="modal-content2">
-                                        <div className="input-field">
-                                            <input
-                                                type="text"
-                                                value={editedNutri.eiweiss}
-                                                onFocus={handleFocus}
-                                                onBlur={handleBlur}
-                                                onChange={(e) => handleInputChange(e, "eiweiss")}
-                                            />
-                                        </div>
-                                        <div className="modal-buttons2">
-                                            <button
-                                                onClick={handleSaveClick} className="save-btn">Speichern
-                                            </button>
-                                            <button
-                                                onClick={closeInputField} className="close-modal-btn">Schließen
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>)}
-
+                                    )}
+                                </React.Fragment>
+                                ))}
                         </div>
-
 
 
                         {/* Gird: 3. Spalte */}
@@ -516,32 +200,32 @@ export default function NutriDatabaseCard(props: Props) {
                         {/* Gird: 4. Spalte */}
 
                         <div className="modal-buttons">
-                                <button
-                                    onClick={handleDeleteClick} className="delete-btn">Löschen
-                                </button>
+                            <button
+                                onClick={handleDeleteClick} className="delete-btn">Löschen
+                            </button>
                             <button
                                 onClick={closeModal} className="close-modal-btn">Schließen
                             </button>
-                            </div>
-
-
                         </div>
+
+
                     </div>
+                </div>
 
 
             )}
-        </div>
-    );
+
+        </>);
 }
 
-    /*
-    return (
-        <div className="nutriDatabase-card">
-            {props.nutriDatabase.name}
-        </div>
-    );
+/*
+return (
+    <div className="nutriDatabase-card">
+        {props.nutriDatabase.name}
+    </div>
+);
 
-     */
+ */
 
 
 
