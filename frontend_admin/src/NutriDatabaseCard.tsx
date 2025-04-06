@@ -79,6 +79,7 @@ export default function NutriDatabaseCard(props: Props) {
         try {
             await axios.delete(`/api/nutri/${props.nutriDatabase.id}`, {
             });
+
             props.reloadData();
             closeModal();
         } catch (error) {
@@ -96,7 +97,7 @@ export default function NutriDatabaseCard(props: Props) {
         setIsFocused(true); // Fokus setzen
         setEditedNutri((prev) => ({
             ...prev,
-            barcode: "", // Leere den Barcode-Wert beim Fokussieren
+            barcode: "", name: "",// Leere den Barcode-Wert beim Fokussieren
         }));
     };
 
@@ -129,7 +130,7 @@ export default function NutriDatabaseCard(props: Props) {
                         <h3>{props.nutriDatabase.name}</h3>
 
                         {/* Grid: 1. Spalte */}
-                        <div>
+                        <div className="edit-modal-labels">
                             <p><strong>Barcode</strong></p>
                             <p><strong>Name</strong></p>
                             <p><strong>Marke</strong></p>
@@ -155,9 +156,12 @@ export default function NutriDatabaseCard(props: Props) {
                                         <p>{props.nutriDatabase[field]}</p>
                                     </div>
 
-                                    {inputField && editingField === field && (
+                                    {inputField && isModalOpen && editingField === field && (
                                         <div className="modal-overlay2" onClick={handleOverlayClick2}>
                                             <div className="modal-content2">
+                                                <div className="modal-save-label">
+                                                    <h3>{field}</h3>
+                                                </div>
                                                 <div className="input-field">
                                                     <input
                                                         type="text"
@@ -168,8 +172,8 @@ export default function NutriDatabaseCard(props: Props) {
                                                     />
                                                 </div>
                                                 <div className="modal-buttons2">
-                                                    <button onClick={handleSaveClick} className="save-btn">Speichern</button>
-                                                    <button onClick={closeInputField} className="close-modal-btn">Schließen</button>
+                                                    <button onClick={handleSaveClick} className="save-btn control-buttons">Speichern</button>
+                                                    <button onClick={closeInputField} className="close-modal-btn control-buttons">Schließen</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -196,36 +200,18 @@ export default function NutriDatabaseCard(props: Props) {
                             <p>g</p>
                         </div>
 
-
                         {/* Gird: 4. Spalte */}
 
                         <div className="modal-buttons">
                             <button
-                                onClick={handleDeleteClick} className="delete-btn">Löschen
+                                onClick={handleDeleteClick} className="delete-btn control-buttons">Löschen
                             </button>
                             <button
-                                onClick={closeModal} className="close-modal-btn">Schließen
+                                onClick={closeModal} className="close-modal-btn control-buttons">Schließen
                             </button>
                         </div>
-
-
                     </div>
                 </div>
-
-
             )}
-
         </>);
 }
-
-/*
-return (
-    <div className="nutriDatabase-card">
-        {props.nutriDatabase.name}
-    </div>
-);
-
- */
-
-
-

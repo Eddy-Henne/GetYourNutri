@@ -1,8 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
-  font-family: 'Roboto', sans-serif;
-  margin: 0;
+  background-image: url('/images/body-background.png');  /* Pfad zum Bild im public Ordner */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  margin: 3px;
+  font-family: Arial, sans-serif;
   padding: 0;
-  background-color: #f5f5f5;
 }
 
 .container {
@@ -72,7 +79,6 @@ margin-top: -25px;
   justify-content: space-between;
   align-items: center;
 
-
 }
 
 .expand-button:hover {
@@ -94,7 +100,8 @@ margin-top: -25px;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 999;
+  inset: 0;
 }
 
 .modal-overlay2 {
@@ -117,35 +124,59 @@ margin-top: -25px;
 
 /* Modal-Inhalt */
 .modal-content {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 8px;
+
+  padding: 20px;
+  border-radius: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  max-width: 500px;
+  max-width: 700px;
   width: 100%;
   display: grid;
-  grid-template-columns: 0.4fr 0.4fr 0.4fr 0.2fr;
+  grid-template-columns: 1fr 1.3fr 0.5fr 0.5fr;
   grid-template-rows: auto 1fr;
   gap: 1px;
   align-items: center;
+  background: linear-gradient(135deg, #f1c6d7, #a1c6f5);
 }
 
 .modal-content2 {
-  display: flex;
-  background-color: white;
-  padding: 2rem;
-  border-radius: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  background: linear-gradient(135deg, #f1c6d7, #a1c6f5);
+  padding: 25px;
+  border-radius: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  max-width: 500px;
-  width: 100%;
+  max-width: 1000px;
+  width: 30%;
   gap: 1px;
   align-items: center;
+
+}
+
+.modal-save-label {
+margin-left: -200px;
 }
 
 .modal-content h3 {
+  font-family: 'Dancing Script', cursive;
   grid-column: 1 / span 4; /* Damit das h3 über alle 4 Spalten geht */
-  margin: 0;
-  font-size: 1.5rem;
+  font-size: 45px;
+  margin-left: 210px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.edit-modal-labels {
+  align-items: flex-end;
+  padding-right: 20px;
+}
+
+.nutri-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr; /* Label – Wert – Einheit */
+  column-gap: 1rem;
+  row-gap: 0.5rem;
+  align-items: center;
 }
 
 .input-field input {
@@ -169,35 +200,6 @@ margin-top: -25px;
 .modal-content div {
     display: flex;
     flex-direction: column;
-}
-
-.modal-buttons {
-  display: flex;
-  flex-direction: column;
-    gap: 10px;
-}
-
-.modal-buttons2 {
-  display: flex;
-  gap: 10px;
-
-}
-
-.save-btn, .edit-btn, .delete-btn, .close-modal-btn {
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.save-btn:hover, .edit-btn:hover, .delete-btn:hover, .close-modal-btn {
-  background-color: #0056b3;
-}
-
-.close-modal-btn:hover {
-  background-color: #e33;
 }
 
 .editable-text {
@@ -227,7 +229,6 @@ h1 {
   margin-bottom: 7px; /* Abstand nach unten */
   margin-top: 10px;
 }
-
 
 .nav-container > div {
   display: flex;
@@ -326,7 +327,6 @@ input[type="radio"] {
   transform: translateY(-50%) scale(1.2); /* Vergrößert den Kreis */
 }
 
-
 /* Wenn der Radiobutton aktiviert ist, füge einen Punkt hinzu */
 #name:checked + .custom-radio::after,
 #kategorie:checked + .custom-radio::after,
@@ -389,16 +389,6 @@ select:focus {
   outline: none;
 }
 
-/* Hauptbereich - body */
-body {
-  background-image: url('/images/body-background.png');  /* Pfad zum Bild im public Ordner */
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  margin: 3px;
-  font-family: Arial, sans-serif;
-}
-
 /* Headerbereich */
 .nav-container-wrapper {
   background-image: url('/images/header-background.png');  /* Pfad zum Bild im public Ordner */
@@ -425,7 +415,7 @@ body {
   padding: 0; /* Entfernt zusätzliche Ränder */
 }
 
-./* Modal-Overlay: Hintergrund abdunkeln und Modal zentrieren */
+/* Modal-Overlay: Hintergrund abdunkeln und Modal zentrieren */
 .add-modal-overlay {
   position: fixed;
   top: 0;
@@ -441,9 +431,9 @@ body {
 
 /* Modal-Inhalt: Positionierung in der Mitte */
 .add-modal-content {
-  background-color: white;
+  background: linear-gradient(135deg, #f1c6d7, #a1c6f5);
   padding: 2rem;
-  border-radius: 8px;
+  border-radius: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   max-width: 580px;
   width: 100%;
@@ -457,9 +447,12 @@ body {
 
 /* Überschrift über dem Grid */
 .add-modal-content h2 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 50px;
   text-align: center;
   margin-bottom: 3rem;
   margin-top: -1rem;
+  margin-left: -18px;
   color: black;
 }
 
@@ -491,55 +484,20 @@ body {
   gap: 1.5rem;
   width: 100%;
   margin-left: -1rem;
+
 }
 
 /* Eingabefelder Stil */
 .add-modal-inputs input {
   width: 100%;
   padding: 0.5rem;
-  border-radius: 4px;
+  border-radius: 14px;
   border: 1px solid #ccc;
   font-size: 1rem;
 }
 
-/* Buttons: Dritte Spalte, vertikal untereinander */
-.add-modal-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  align-items: flex-end;
-  justify-content: center; /* Buttons oben in der Spalte */
-  margin-left: 0;
-  margin-right: 0;
-  margin-top: -1rem;
-}
-
-/* Button-Stil */
-.add-modal-buttons button {
-  width: 100%;
-  max-width: 150px;
-  padding: 0.8rem 1.2rem;
-  border-radius: 8px;
-  border: none;
-  background-color: #4CAF50;
-  color: black;
-  font-size: 1.2rem;
-  cursor: pointer;
-  text-align: center;
-}
-
-.add-modal-buttons button:hover {
-  background-color: #45a049;
-}
-
-.click-game {
-  position: relative;
-  width: 100%;
-  height: 700px; /* oder mehr, je nach Platz */
-  background-color: rgba(255, 255, 255, 0.1); /* leicht transparent für Test */
-  z-index: 9999;
-
-  outline: 2px solid red;
+.add-modal-inputs input.filled {
+  background-color: #e3e3e3;
 }
 
 .loader-overlay {
@@ -587,9 +545,52 @@ body {
   }
 }
 
-.overlay-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4); /* leichte Verdunkelung */
-  z-index: 999;
+.control-buttons {
+  width: 100%;
+  max-width: 150px;
+  padding: 0.6rem 1rem;
+  border-radius: 15px;
+  border: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-align: center;
+  background-color: #007bff;
+  color: white;
 }
+.control-buttons:hover {
+  background-color: #0056b3;
+  }
+.delete-btn:hover {
+  background-color: #e33;
+}
+
+.control-buttons-create-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  align-items: flex-end;
+  justify-content: center; /* Buttons oben in der Spalte */
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: -1rem;
+}
+
+.modal-buttons {
+  display: flex;
+  flex-direction: column;
+  height: 135%;
+}
+
+.modal-buttons button:last-child {
+  margin-top: 190px; /* Schiebt den letzten Button ganz nach unten */
+}
+
+.modal-buttons2 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+}
+
+
+

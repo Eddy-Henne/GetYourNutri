@@ -16,7 +16,7 @@ function App() {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    // 💡 Items laden und aktualisieren
+    //              Items laden und aktualisieren
 
     const fetchNutris = () => {
         setIsLoading(true);
@@ -34,9 +34,10 @@ function App() {
         });
     };
 
-    // useEffect lädt beim ersten Start die Daten
+    //                  Initiales Laden der Items
+
     useEffect(() => {
-        fetchNutris(); // 🔁 Hier wird die neue Funktion aufgerufen
+        fetchNutris();
     }, []);
 
     if (nutriDatabases.length === 0) {
@@ -87,7 +88,7 @@ function App() {
                     <div className="loader-overlay">
                         <div className="loader-spinner">
                         </div>
-                        <p>Speichern...</p>
+                        <p>Bearbeiten...</p>
                     </div>
                     </div>)}
             <NutriDatabaseMapping
@@ -95,8 +96,6 @@ function App() {
                 filteredNutriDatabases={filteredNutriDatabases}
                 reloadData={fetchNutris}
             />
-
-
             </>
         }/>
         <Route path={"/login"} element={<LoginPage/>}/>

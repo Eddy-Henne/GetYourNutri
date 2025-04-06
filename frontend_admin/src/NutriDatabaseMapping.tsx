@@ -1,5 +1,8 @@
 import { NutriDatabase } from "./NutriDatabase.ts";
 import NutriDatabaseCard from "./NutriDatabaseCard.tsx";
+import {useState} from "react";
+import PapierkorbButton from "./PapierkorbButton.tsx";
+import PapierkorbModal from "./PapierkorbModal.tsx";
 
 type Props = {
     filteredNutriDatabases: NutriDatabase[],
@@ -13,10 +16,27 @@ export default function NutriDatabaseMapping(props: Props) {
         <NutriDatabaseCard key={nutriItem.id} nutriDatabase={nutriItem} selectedSort={props.selectedSort} reloadData={props.reloadData}/>
     ));
 
+    const [isPapierkorbOpen, setIsPapierkorbOpen] = useState(false);
+
     return(
         <>
             <div className="container">
             {nutriDatabaseCards}
+            </div>
+
+            <div className="flex items-center gap-4">
+                {/* Deine bestehenden Buttons */}
+                <PapierkorbButton onClick={() => setIsPapierkorbOpen(true)} />
+
+                <PapierkorbModal
+                    isOpen={isPapierkorbOpen}
+                    onClose={() => setIsPapierkorbOpen(false)}
+                    onRestore={() => {
+                        // Aktualisieren der Listen – optional abhängig von Struktur
+                        setIsPapierkorbOpen(false);
+                        window.location.reload(); // oder state neu laden
+                    }}
+                />
             </div>
         </>
     )

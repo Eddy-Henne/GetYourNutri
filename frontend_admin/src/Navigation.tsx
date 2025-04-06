@@ -20,9 +20,15 @@ type Props = {
 export default function Navigation(props: Props) {
 
     const [selectedOption, setSelectedOption] = useState<string>('name');
+    const [focusedField, setFocusedField] = useState('');
+
 
     const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedOption(event.target.value);
+    };
+
+    const isFilled = (fieldName: string) => {
+        return formData[fieldName]?.trim() !== '' && focusedField !== fieldName;
     };
 
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -55,8 +61,15 @@ export default function Navigation(props: Props) {
 
     // Funktion zum Speichern des neuen Objekts
     const handleCreateObject = async () => {
+        const cleanedFormData = Object.fromEntries(
+            Object.entries(formData).map(([key, value]) => [
+                key,
+                value === "" ? "kein Eintrag" : value,
+            ])
+        );
+
         try {
-            const response = await axios.post("/api/nutri", formData, {
+            const response = await axios.post("/api/nutri", cleanedFormData, {
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -98,8 +111,8 @@ export default function Navigation(props: Props) {
             <div className="nav-container">
 
             <div className="radio-container">
-                {/* Radiobuttons für Sortieroptionen */}
 
+                {/* Radiobuttons für Sortieroptionen */}
                     <input
                         type="radio"
                         name="sortOption"
@@ -194,26 +207,39 @@ export default function Navigation(props: Props) {
                                 </div>
 
                                 {/* Zweite Spalte: Eingabefelder */}
-                                <div className="add-modal-inputs">
-                                    <input type="text" name="barcode" value={formData.barcode} onChange={handleChange} />
-                                    <input type="text" name="name" value={formData.name} onChange={handleChange} />
-                                    <input type="text" name="marke" value={formData.marke} onChange={handleChange} />
-                                    <input type="text" name="supermarkt" value={formData.supermarkt} onChange={handleChange} />
-                                    <input type="text" name="kategorie" value={formData.kategorie} onChange={handleChange} />
-                                    <input type="text" name="essbar" value={formData.essbar} onChange={handleChange} />
-                                    <input type="text" name="energie" value={formData.energie} onChange={handleChange} />
-                                    <input type="text" name="fett" value={formData.fett} onChange={handleChange} />
-                                    <input type="text" name="fettsaeuren" value={formData.fettsaeuren} onChange={handleChange} />
-                                    <input type="text" name="kohlenhydrate" value={formData.kohlenhydrate} onChange={handleChange} />
-                                    <input type="text" name="zucker" value={formData.zucker} onChange={handleChange} />
-                                    <input type="text" name="eiweiss" value={formData.eiweiss} onChange={handleChange} />
-                                </div>
+                                    <div className="add-modal-inputs">
+                                        {[
+                                            'barcode',
+                                            'name',
+                                            'marke',
+                                            'supermarkt',
+                                            'kategorie',
+                                            'essbar',
+                                            'energie',
+                                            'fett',
+                                            'fettsaeuren',
+                                            'kohlenhydrate',
+                                            'zucker',
+                                            'eiweiss',
+                                        ].map((field) => (
+                                            <input
+                                                key={field}
+                                                type="text"
+                                                name={field}
+                                                value={formData[field]}
+                                                onChange={handleChange}
+                                                onFocus={() => setFocusedField(field)}
+                                                onBlur={() => setFocusedField('')}
+                                                className={isFilled(field) ? 'filled' : ''}
+                                            />
+                                        ))}
+                                    </div>
 
                                 {/* Dritte Spalte: Buttons */}
-                                <div className="add-modal-buttons">
-                                    <button onClick={handleCreateObject}>Erstellen</button>
-                                    <button onClick={closeAddModal}>Schließen</button>
-                                    <button onClick={() => setFormData({
+                                <div className="control-buttons-create-container">
+                                    <button className="control-buttons" onClick={handleCreateObject}>Erstellen</button>
+                                    <button className="control-buttons" onClick={closeAddModal}>Schließen</button>
+                                    <button className="control-buttons" onClick={() => setFormData({
                                         barcode: '',
                                         name: '',
                                         marke: '',

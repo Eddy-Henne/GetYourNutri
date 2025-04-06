@@ -1,7 +1,6 @@
 import axios from "axios";
 import {FormEvent, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import ClickGame from "./ClickGame.tsx";
 
 export default function LoginPage() {
     const [username, setUsername] = useState<string>("");
@@ -34,9 +33,6 @@ export default function LoginPage() {
 
     return(
         <div>
-            <div className="click-game">
-                <ClickGame />
-            </div>
         <form onSubmit={handleLogin}>
             <input value={username} onChange={(e) => setUsername(e.target.value)} placeholder={"Username"}/>
             <input value={password} onChange={(e) => setPassword(e.target.value)} placeholder={"Password"} type={"password"}/>
