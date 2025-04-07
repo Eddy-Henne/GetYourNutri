@@ -9,6 +9,7 @@ type Props = {
     selectedSort: string;
     nutriDatabase: NutriDatabase;
     reloadData: () => void;
+    onPapierkorbUpdate: () => void;
 };
 
 export default function NutriDatabaseCard(props: Props) {
@@ -81,6 +82,7 @@ export default function NutriDatabaseCard(props: Props) {
             });
 
             props.reloadData();
+            props.onPapierkorbUpdate();
             closeModal();
         } catch (error) {
             console.error("Fehler beim Löschen:", error);

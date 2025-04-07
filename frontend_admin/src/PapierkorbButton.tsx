@@ -1,31 +1,29 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { useEffect, useState } from "react";
-import {Button} from "./components/ui/button.tsx";
+import './styles/PapierkorbButton.css';
+import trashS1 from './assets/images/trashS1.png';
+import trashS2 from './assets/images/trashS2.png';
+import trashS3 from './assets/images/trashS3.png';
+import trashS4 from './assets/images/trashS4.png';
 
 interface Props {
+    count: number;
     onClick: () => void;
+
 }
 
-export default function PapierkorbButton({ onClick }: Props) {
-    const [isFull, setIsFull] = useState(false);
+export default function PapierkorbButton({ count, onClick }: Props) {
 
-    useEffect(() => {
-        fetch("/api/papierkorb")
-            .then((res) => res.json())
-            .then((data) => setIsFull(data.length > 0))
-        .catch((err) => console.error("Papierkorb-Ladefehler:", err));
-    }, []);
+            const getIcon = () => {
+            if (count === 0) return trashS1;
+            if (count < 5) return trashS2;
+            if (count < 10) return trashS3;
+            return trashS4;
+    };
 
     return (
-        <div>
-        <Button onClick={onClick} variant="ghost">
-            <FontAwesomeIcon
-                icon={isFull ? faTrashAlt : faTrash}
-                className={isFull ? "text-red-500" : ""}
-            />
-            <span className="ml-2">Papierkorb</span>
-        </Button>
-        </div>
+        <button className="papierkorb-button" onClick={onClick}>
+            <img src={getIcon()} alt="Papierkorb" className="papierkorb-icon" />
+            <span className="papierkorb-label">Papierkorb</span>
+            <span className="papierkorb-badge">{count} / 10</span>
+        </button>
     );
 }

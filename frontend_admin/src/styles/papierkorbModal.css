@@ -1,0 +1,209 @@
+.modal-overlay-papierkorb {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal-wrapper {
+    display: flex;
+    gap: 20px;
+    max-width: 1400px;
+    width: 100%;
+    padding: 20px;
+}
+
+.modal-content-papierkorb {
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    flex: 1;
+    height: 80vh;
+    overflow-y: auto;
+    background: linear-gradient(135deg, #f1c6d7, #a1c6f5);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.modal-left {
+    flex: 1;
+}
+
+.modal-right {
+    flex: 1.2;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 12px;
+    text-align: center;          /* horizontal zentrieren */
+    margin-top: 0;               /* Abstand nach oben nullen */
+    padding-top: 0px;           /* optional: etwas Abstand zum oberen Rand */
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #444;
+    cursor: pointer;
+}
+
+.modal-clear {
+    position: absolute;
+    top: 10px;
+    left: 15px; /* statt right */
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal-clear:hover {
+    background-color: #b02a37;
+}
+
+
+
+/* Standardschrift für Objektnamen */
+.standard-font {
+    font-family: sans-serif;
+    font-size: 18px;
+    margin-right: 1rem;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Container-Stil für jeden Papierkorb-Eintrag */
+.papierkorb-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 1rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 2rem rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, #f1c6d7, #a1c6f5);
+    margin: 7px -6px;
+    width: 580px;
+    height: 28px;
+}
+
+/* Container für alle vier Inhalte in einer Zeile */
+.papierkorb-inline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* Optional: Stil für das Info-Button ("i") */
+.papierkorb-detail-button {
+    font-size: 18px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Deine übergebenen Button-Stile */
+
+
+.control-buttons:hover {
+    background-color: #0056b3;
+}
+
+.delete-btn:hover {
+    background-color: #e33;
+}
+
+.papierkorb-name {
+    font-family: sans-serif;
+    font-size: 18px;
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.papierkorb-button-group {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+/* Kopfzeile: Name + Info-Button */
+.papierkorb-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+/* Neue Klasse für die Button-Reihe unten */
+.papierkorb-button-row {
+    display: flex;
+    flex-direction: row; /* <-- Wichtig */
+    justify-content: flex-start; /* oder center, wenn gewünscht */
+    align-items: center;
+    gap: 0.5rem; /* Abstand zwischen Buttons */
+    margin-top: 0.5rem; /* Abstand nach oben zur Trennung vom Titel */
+}
+
+    .papierkorb-buttons {
+        display: flex;
+        gap: 0.4rem;
+        align-items: center;
+    }
+.papierkorb-restore-button {
+    padding: 0.4rem 0.6rem; /* kompakter */
+    border-radius: 15px;
+    border: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-align: center;
+    background-color: #007bff; /* ursprüngliches Blau */
+    color: white;
+    max-width: 150px;
+}
+
+.papierkorb-restore-button:hover {
+    background-color: #0056b3; /* Hover-Effekt wie gewünscht */
+}
+
+
+.papierkorb-delete-button {
+    padding: 0.4rem 0.6rem; /* kompakter */
+    border-radius: 15px;
+    border: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-align: center;
+    background-color: #007bff; /* Startfarbe gleich wie restore */
+    color: white;
+    max-width: 150px;
+}
+
+.papierkorb-delete-button:hover {
+    background-color: #e33; /* kräftiges Rot beim Hover */
+}

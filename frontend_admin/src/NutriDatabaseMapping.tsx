@@ -8,12 +8,14 @@ type Props = {
     filteredNutriDatabases: NutriDatabase[],
     selectedSort: string;
     reloadData: () => void;
+    refreshPapierkorb: () => void;
+    papierkorbCount: number;
 };
 
 export default function NutriDatabaseMapping(props: Props) {
     // Hier wird das Mapping gemacht und in einer Variablen gespeichert
     const nutriDatabaseCards = props.filteredNutriDatabases.map((nutriItem) => (
-        <NutriDatabaseCard key={nutriItem.id} nutriDatabase={nutriItem} selectedSort={props.selectedSort} reloadData={props.reloadData}/>
+        <NutriDatabaseCard key={nutriItem.id} nutriDatabase={nutriItem} selectedSort={props.selectedSort} reloadData={props.reloadData} onPapierkorbUpdate={props.refreshPapierkorb}/>
     ));
 
     const [isPapierkorbOpen, setIsPapierkorbOpen] = useState(false);
@@ -26,7 +28,7 @@ export default function NutriDatabaseMapping(props: Props) {
 
             <div className="flex items-center gap-4">
                 {/* Deine bestehenden Buttons */}
-                <PapierkorbButton onClick={() => setIsPapierkorbOpen(true)} />
+                <PapierkorbButton onClick={() => setIsPapierkorbOpen(true)} count={props.papierkorbCount} />
 
                 <PapierkorbModal
                     isOpen={isPapierkorbOpen}
@@ -37,7 +39,7 @@ export default function NutriDatabaseMapping(props: Props) {
                         window.location.reload(); // oder state neu laden
                     }}
                 />
-            </div>
+                </div>
         </>
     )
 }

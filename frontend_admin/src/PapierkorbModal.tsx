@@ -1,11 +1,21 @@
 import { useEffect, useState } from "react";
-import {Button} from "./components/ui/button.tsx";
+import "@/styles/papierkorbModal.css"; // <- dein CSS kommt dort rein
+import './styles/papierkorbModal.css';
 
 interface PapierkorbNutri {
     id: string;
+    barcode: string;
     name: string;
     marke: string;
+    supermarkt: string;
     kategorie: string;
+    essbar: string;
+    energie: string;
+    fett: string;
+    fettsaeuren: string;
+    kohlenhydrate: string;
+    zucker: string;
+    eiweiss: string;
 }
 
 interface Props {
@@ -16,6 +26,7 @@ interface Props {
 
 export default function PapierkorbModal({ isOpen, onClose, onRestore }: Props) {
     const [entries, setEntries] = useState<PapierkorbNutri[]>([]);
+    const [entriesToDelete, setEntriesToDelete] = useState<string[]>([]);
 
     useEffect(() => {
         if (isOpen) {
@@ -30,58 +41,82 @@ export default function PapierkorbModal({ isOpen, onClose, onRestore }: Props) {
         onRestore();
     };
 
-    const removeForever = async (id: string) => {
-        await fetch(`/api/papierkorb/${id}`, { method: "DELETE" });
-        onRestore();
+    const markForDeletion = (id: string) => {
+        setEntriesToDelete((prev) => [...prev, id]);
+        setEntries((prev) => prev.filter((entry) => entry.id !== id));
     };
+
+    const handleClearPapierkorb = async () => {
+        await fetch("/api/papierkorb/clear", { method: "DELETE" });
+        onRestore(); // Aktualisiert die Liste
+        }
+
+    const handleClose = async () => {
+        if (entriesToDelete.length > 0) {
+            // Nur wenn etwas markiert wurde, löschen & aktualisieren
+            for (const id of entriesToDelete) {
+                await fetch(`/api/papierkorb/${id}`, { method: "DELETE" });
+            }
+            setEntriesToDelete([]);
+            onRestore(); // Liste nur dann aktualisieren
+        }
+        onClose(); // Modal schließen – unabhängig davon
+    };
+
 
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
-            <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-2xl relative">
-                <h2 className="text-xl font-bold mb-4">Papierkorb</h2>
-                <button
-                    onClick={onClose}
-                    className="absolute top-2 right-3 text-gray-500 hover:text-black text-xl"
-                >
-                    &times;
-                </button>
+        <div className="modal-overlay-papierkorb">
+            <div className="modal-wrapper">
+                {/* Linke Spalte */}
+                <div className="modal-content-papierkorb modal-left">
+                    <h2 className="modal-title">Papierkorb</h2>
+                    <button className="modal-clear" onClick={handleClearPapierkorb}>Papierkorb leeren</button>
+                    <button className="modal-close" onClick={handleClose}>&times;</button>
 
-                {entries.length === 0 ? (
-                    <p className="text-gray-500">Der Papierkorb ist leer.</p>
-                ) : (
-                    <div className="space-y-3">
-                        {entries.map((entry) => (
-                            <div
-                                key={entry.id}
-                                className="flex items-center justify-between border p-2 rounded-xl shadow-sm"
-                            >
-                                <div>
-                                    <p className="font-semibold">{entry.name}</p>
-                                    <p className="text-sm text-gray-500">
-                                        {entry.marke} · {entry.kategorie}
-                                    </p>
+                    {entries.length === 0 ? (
+                        <p className="text-gray-500">Der Papierkorb ist leer.</p>
+                    ) : (
+                        <div className="space-y-2">
+                            {entries.map((entry) => (
+                                <div key={entry.id} className="papierkorb-entry">
+                                    <div className="papierkorb-inline">
+                                        <h4 className="standard-font">{entry.name}</h4>
+                                        <div className="papierkorb-buttons">
+                                            <button
+                                                onClick={() => restore(entry.id)}
+                                                className="papierkorb-restore-button"
+                                            >
+                                                Wiederherstellen
+                                            </button>
+                                            <button
+                                                onClick={() => markForDeletion(entry.id)}
+                                                className="papierkorb-delete-button"
+                                            >
+                                                Löschen
+                                            </button>
+                                            <button
+                                                className="papierkorb-detail-button"
+                                                onClick={() => console.log("Details für:", entry.name)}
+                                            >
+                                                i
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="flex gap-2">
-                                    <Button
-                                        onClick={() => restore(entry.id)}
-                                        variant="outline"
-                                        className="text-green-600 border-green-400"
-                                    >
-                                        Wiederherstellen
-                                    </Button>
-                                    <Button
-                                        onClick={() => removeForever(entry.id)}
-                                        variant="destructive"
-                                    >
-                                        Endgültig löschen
-                                    </Button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
+
+
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                {/* Rechte Spalte (wird später mit Details befüllt) */}
+                <div className="modal-content modal-right">
+                    <h2 className="modal-title">Details</h2>
+                    {/* Noch leer – kommt im nächsten Schritt */}
+                </div>
             </div>
         </div>
     );

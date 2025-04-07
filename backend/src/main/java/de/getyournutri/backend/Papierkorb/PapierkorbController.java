@@ -2,6 +2,7 @@ package de.getyournutri.backend.Papierkorb;
 
 import de.getyournutri.backend.NutriDatabase.NutriDatabase;
 import de.getyournutri.backend.NutriDatabase.NutriDatabaseRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +28,12 @@ public class PapierkorbController {
     @DeleteMapping("/{id}")
     public void deleteFromPapierkorb(@PathVariable String id) {
         papierkorbRepository.deleteById(id);
+    }
+
+    @DeleteMapping("/clear")
+    public ResponseEntity<Void> clearPapierkorb() {
+        papierkorbRepository.deleteAll();
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/restore/{id}")

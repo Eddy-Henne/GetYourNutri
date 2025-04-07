@@ -7,6 +7,7 @@ import {Route, Routes} from "react-router-dom";
 import NutriDatabaseMapping from "./NutriDatabaseMapping.tsx";
 import LoginPage from "./LoginPage.tsx";
 import RegisterPage from "./RegisterPage.tsx";
+import PapierkorbButton from "./PapierkorbButton.tsx";
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [papierkorbCount, setPapierkorbCount] = useState<number>(0);
 
     //              Items laden und aktualisieren
 
@@ -34,10 +36,25 @@ function App() {
         });
     };
 
+    const fetchPapierkorbCount = () => {
+        axios.get("/api/papierkorb")
+            .then(response => {
+                console.log("Papierkorb-Daten:", response.data);
+                setPapierkorbCount(response.data.length); // 👈 hier wird gesetzt
+            })
+            .catch(error => {
+                console.error("Fehler beim Laden des Papierkorb-Counts:", error);
+            });
+    };
+
     //                  Initiales Laden der Items
 
     useEffect(() => {
         fetchNutris();
+    }, []);
+
+    useEffect(() => {
+        fetchPapierkorbCount();
     }, []);
 
     if (nutriDatabases.length === 0) {
@@ -68,12 +85,16 @@ function App() {
             return 0;
         });
 
+
+
     return(
 
     <Routes>
         <Route path={"/"} element={
             <>
-            <Navigation
+                <PapierkorbButton count={papierkorbCount} onClick={() => console.log("Papierkorb öffnen")} />
+
+                <Navigation
                 categories={categories}
                 selectedSort={selectedSort}
                 setSelectedSort={setSelectedSort}
@@ -95,6 +116,8 @@ function App() {
                 selectedSort={selectedSort}
                 filteredNutriDatabases={filteredNutriDatabases}
                 reloadData={fetchNutris}
+                refreshPapierkorb={fetchPapierkorbCount}
+                papierkorbCount={papierkorbCount}
             />
             </>
         }/>
