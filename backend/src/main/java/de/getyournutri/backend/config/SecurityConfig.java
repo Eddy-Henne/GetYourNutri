@@ -36,14 +36,14 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers(HttpMethod.POST, "/api/users/register",  "/api/users/login").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/users/register",  "/api/users/login","/api/users/login").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/users/me").authenticated()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginProcessingUrl("/api/users/login") // <- das ist dein Login-Endpoint!
-                        .usernameParameter("username")          // ← Form-Feldname
-                        .passwordParameter("password")          // ← Form-Feldname
+                        .loginProcessingUrl("/api/users/login")
+                        .usernameParameter("username")
+                        .passwordParameter("password")
                         .successHandler((request, response, authentication) -> response.setStatus(200))
                         .failureHandler((request, response, exception) -> response.setStatus(401))
                         .permitAll()
@@ -69,5 +69,4 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", config);
         return source;
     }
-
 }

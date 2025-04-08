@@ -1,6 +1,5 @@
 package de.getyournutri.backend.NutriDatabase;
 
-
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -38,12 +37,12 @@ public class NutriDatabaseService {
     }
 
     public NutriDatabase findNutriDatabaseById(String id) {
-        return nutriDatabaseRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Nutri with id " + id + " not found"));
+        return nutriDatabaseRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Nutri mit  " + id + " nicht gefunden"));
     }
 
     public void deleteNutriDatabase(String id) {
         NutriDatabase nutriToDelete = nutriDatabaseRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Nutri with id " + id + " not found"));
+                .orElseThrow(() -> new NoSuchElementException("Nutri mit id " + id + " nicht gefunden"));
 
         PapierkorbNutri papierkorbNutri = new PapierkorbNutri(
                 nutriToDelete.getId(),
@@ -67,7 +66,6 @@ public class NutriDatabaseService {
             PapierkorbNutri oldest = papierkorbInhalte.getFirst();
             papierkorbRepository.deleteById(oldest.getId());
         }
-
         nutriDatabaseRepository.deleteById(id);
     }
 }
