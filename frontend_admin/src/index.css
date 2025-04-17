@@ -227,7 +227,7 @@ h1 {
   align-items: center; /* Vertikale Ausrichtung der Elemente */
   gap: 105px; /* Abstand zwischen den Elementen */
   margin-bottom: 7px; /* Abstand nach unten */
-  margin-top: 10px;
+  margin-top: -4px;
 }
 
 .nav-container > div {
@@ -287,7 +287,7 @@ input[type="radio"] {
 .custom-radio {
   position: relative;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 16px;
   color: white;
   display: flex;
   align-items: center;
@@ -309,7 +309,8 @@ input[type="radio"] {
 }
 
 /* Wenn der Radiobutton ausgewählt ist */
-#name:checked + .custom-radio::before {
+#tabelle:checked + .custom-radio::before,
+#rad:checked + .custom-radio::before {
   background-color: #2ecc71; /* Blau bei Auswahl */
   border-color: #3498db;
   transform: translateY(-50%) scale(1.2); /* Vergrößert den Kreis */
@@ -328,9 +329,8 @@ input[type="radio"] {
 }
 
 /* Wenn der Radiobutton aktiviert ist, füge einen Punkt hinzu */
-#name:checked + .custom-radio::after,
-#kategorie:checked + .custom-radio::after,
-#barcode:checked + .custom-radio::after {
+#tabelle:checked + .custom-radio::after,
+#rad:checked + .custom-radio::after {
   content: '';
   position: absolute;
   left: -14.3px;
@@ -395,14 +395,14 @@ select:focus {
   background-size: 120% auto;
   background-position: 0px center;
   background-attachment: scroll;
-  height: 240px;
+  height: 210px;
 
   color: white;
   background-repeat: no-repeat;
 }
 .header-container {
   width: 100%;
-  height: 180px; /* Stelle sicher, dass der Header eine Höhe hat, die genug Platz für das Bild bietet */
+  height: 160px; /* Stelle sicher, dass der Header eine Höhe hat, die genug Platz für das Bild bietet */
   background-image: url('/images/Icon transparent get your nutri.png'); /* Dein Bildpfad hier */
   background-position: left;
   background-size: 10%; /* Bild skalieren, sodass es den gesamten Container ausfüllt */

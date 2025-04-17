@@ -8,8 +8,8 @@ import axios from "axios";
 
 type Props = {
     categories: string[];
-    selectedSort: string;
-    setSelectedSort: React.Dispatch<React.SetStateAction<string>>;
+    selectedView: 'Tabelle' | 'Rad';
+    setSelectedView: React.Dispatch<React.SetStateAction<'Tabelle' | 'Rad'>>;
     selectedCategory: string;
     setSelectedCategory: (category: string) => void;
     searchTerm: string;
@@ -19,13 +19,7 @@ type Props = {
 
 export default function Navigation(props: Props) {
 
-    const [selectedOption, setSelectedOption] = useState<string>('name');
     const [focusedField, setFocusedField] = useState('');
-
-
-    const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedOption(event.target.value);
-    };
 
     const isFilled = (fieldName: string) => {
         return formData[fieldName]?.trim() !== '' && focusedField !== fieldName;
@@ -98,8 +92,6 @@ export default function Navigation(props: Props) {
         }
     };
 
-
-
     return (
         <>
         <div className="nav-container-wrapper">
@@ -116,37 +108,25 @@ export default function Navigation(props: Props) {
                     <input
                         type="radio"
                         name="sortOption"
-                        id="name"
-                        value="name"
-                        checked={selectedOption === 'name'}
-                        onChange={(e) => { props.setSelectedSort('name'); handleRadioChange(e); }}
+                        id="tabelle"
+                        value="Tabelle"
+                        checked={props.selectedView === 'Tabelle'}
+                        onChange={() => props.setSelectedView('Tabelle')}
                     />
-                <label className="custom-radio" htmlFor="name">
-                    <span>Name</span>
+                <label className="custom-radio" htmlFor="tabelle">
+                    <span>Tabelle</span>
                 </label>
 
                     <input
                         type="radio"
                         name="sortOption"
-                        id="kategorie"
-                        value="kategorie"
-                        checked={selectedOption === 'kategorie'}
-                        onChange={(e) => { props.setSelectedSort('kategorie'); handleRadioChange(e); }}
+                        id="rad"
+                        value="Rad"
+                        checked={props.selectedView === 'Rad'}
+                        onChange={() => props.setSelectedView('Rad')}
                     />
-                <label className="custom-radio" htmlFor="kategorie">
-                    <span>Kategorie</span>
-                </label>
-
-                    <input
-                        type="radio"
-                        name="sortOption"
-                        id="barcode"
-                        value="barcode"
-                        checked={selectedOption === 'barcode'}
-                        onChange={(e) => { props.setSelectedSort('barcode'); handleRadioChange(e); }}
-                    />
-                <label className="custom-radio" htmlFor="barcode">
-                    <span>Barcode</span>
+                <label className="custom-radio" htmlFor="rad">
+                    <span>Karussell</span>
                 </label>
             </div>
 

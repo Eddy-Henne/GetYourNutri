@@ -6,37 +6,64 @@ import PapierkorbModal from "./PapierkorbModal.tsx";
 
 type Props = {
     filteredNutriDatabases: NutriDatabase[],
-    selectedSort: string;
+    selectedView: 'Tabelle' | 'Rad';
     reloadData: () => void;
     refreshPapierkorb: () => void;
     papierkorbCount: number;
 };
 
 export default function NutriDatabaseMapping(props: Props) {
-    // Hier wird das Mapping gemacht und in einer Variablen gespeichert
-    const nutriDatabaseCards = props.filteredNutriDatabases.map((nutriItem) => (
-        <NutriDatabaseCard key={nutriItem.id} nutriDatabase={nutriItem} selectedSort={props.selectedSort} reloadData={props.reloadData} onPapierkorbUpdate={props.refreshPapierkorb}/>
-    ));
 
     const [isPapierkorbOpen, setIsPapierkorbOpen] = useState(false);
 
     return(
         <>
             <div className="container">
-            {nutriDatabaseCards}
+                {props.selectedView === "Tabelle" && (
+                    props.filteredNutriDatabases.map((nutriItem) => (
+                        <NutriDatabaseCard
+                            key={nutriItem.id}
+                            nutriDatabase={nutriItem}
+                            selectedView={props.selectedView}
+                            reloadData={props.reloadData}
+                            onPapierkorbUpdate={props.refreshPapierkorb}
+                            nutriList={props.filteredNutriDatabases}
+                            onSelect={(nutri) => console.log("Ausgewählt:", nutri.name)}
+                        />
+                    ))
+                )}
+
+                {props.selectedView === "Rad" && (
+                    // 👉 Hier nur **einmal** das Rad mit allen Items
+                    <NutriDatabaseCard
+                        nutriDatabase={props.filteredNutriDatabases[0]} // Platzhalter
+                        selectedView={props.selectedView}
+                        reloadData={props.reloadData}
+                        onPapierkorbUpdate={props.refreshPapierkorb}
+                        nutriList={props.filteredNutriDatabases}
+                        onSelect={(nutri) => {
+                            if (nutri) {
+                                console.log("Ausgewählt:", nutri.name);
+                            } else {
+                                console.warn("⚠️ Kein nutri-Objekt übergeben!");
+                            }
+                        }}
+                    />
+                )}
             </div>
 
             <div className="flex items-center gap-4">
-                {/* Deine bestehenden Buttons */}
+
                 <PapierkorbButton onClick={() => setIsPapierkorbOpen(true)} count={props.papierkorbCount} />
 
                 <PapierkorbModal
                     isOpen={isPapierkorbOpen}
                     onClose={() => setIsPapierkorbOpen(false)}
                     onRestore={() => {
-                        // Aktualisieren der Listen – optional abhängig von Struktur
+                        // Aktualisieren der Listen
                         setIsPapierkorbOpen(false);
-                        window.location.reload(); // oder state neu laden
+                        props.reloadData();
+                        props.refreshPapierkorb();
                     }}
                 />
                 </div>

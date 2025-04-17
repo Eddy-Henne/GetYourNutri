@@ -12,7 +12,7 @@ import PapierkorbButton from "./PapierkorbButton.tsx";
 function App() {
 
     const [nutriDatabases, setNutriDatabases] = useState<NutriDatabase[]>([]);
-    const [selectedSort, setSelectedSort] = useState<string>('name');
+    const [selectedView, setSelectedView] = useState<'Tabelle' | 'Rad'>('Tabelle');
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -40,7 +40,7 @@ function App() {
         axios.get("/api/papierkorb")
             .then(response => {
                 console.log("Papierkorb-Daten:", response.data);
-                setPapierkorbCount(response.data.length); // 👈 hier wird gesetzt
+                setPapierkorbCount(response.data.length);
             })
             .catch(error => {
                 console.error("Fehler beim Laden des Papierkorb-Counts:", error);
@@ -72,23 +72,8 @@ function App() {
                 !item.kategorie.toLowerCase().includes(searchTerm.toLowerCase()) &&
                 !item.barcode.includes(searchTerm));
         })
-        .sort((a, b) => {
-            if (selectedSort === 'name') {
-                return a.name.localeCompare(b.name);
-            }
-            if (selectedSort === 'kategorie') {
-                return a.kategorie.localeCompare(b.kategorie);
-            }
-            if (selectedSort === 'barcode') {
-                return a.barcode.localeCompare(b.barcode);
-            }
-            return 0;
-        });
-
-
 
     return(
-
     <Routes>
         <Route path={"/"} element={
             <>
@@ -96,14 +81,14 @@ function App() {
 
                 <Navigation
                 categories={categories}
-                selectedSort={selectedSort}
-                setSelectedSort={setSelectedSort}
+                selectedView={selectedView}
+                setSelectedView={setSelectedView}
                 selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
                 refreshNutris={fetchNutris}
-            />
+                />
                 {isLoading && (
                     <div className="overlay-backdrop">
                     <div className="loader-overlay">
@@ -112,13 +97,13 @@ function App() {
                         <p>Bearbeiten...</p>
                     </div>
                     </div>)}
-            <NutriDatabaseMapping
-                selectedSort={selectedSort}
-                filteredNutriDatabases={filteredNutriDatabases}
-                reloadData={fetchNutris}
-                refreshPapierkorb={fetchPapierkorbCount}
-                papierkorbCount={papierkorbCount}
-            />
+                <NutriDatabaseMapping
+                    selectedView={selectedView}
+                    filteredNutriDatabases={filteredNutriDatabases}
+                    reloadData={fetchNutris}
+                    refreshPapierkorb={fetchPapierkorbCount}
+                    papierkorbCount={papierkorbCount}
+                />
             </>
         }/>
         <Route path={"/login"} element={<LoginPage/>}/>
