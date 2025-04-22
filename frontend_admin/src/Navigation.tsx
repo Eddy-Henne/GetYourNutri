@@ -6,6 +6,19 @@ import {faFileLines} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import LogoutButton from './LogoutButton';
 
+type FormField =
+    | 'barcode'
+    | 'name'
+    | 'marke'
+    | 'supermarkt'
+    | 'kategorie'
+    | 'essbar'
+    | 'energie'
+    | 'fett'
+    | 'fettsaeuren'
+    | 'kohlenhydrate'
+    | 'zucker'
+    | 'eiweiss';
 
 type Props = {
     categories: string[];
@@ -19,18 +32,9 @@ type Props = {
 };
 
 export default function Navigation(props: Props) {
-
-    const [focusedField, setFocusedField] = useState('');
-
-    const isFilled = (fieldName: string) => {
-        return formData[fieldName]?.trim() !== '' && focusedField !== fieldName;
-    };
-
+    const [focusedField, setFocusedField] = useState<FormField | ''>('');
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-    const openAddModal = () => setIsAddModalOpen(true);
-    const closeAddModal = () => setIsAddModalOpen(false);
-
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<Record<FormField, string>>({
         barcode: '',
         name: '',
         marke: '',
@@ -45,7 +49,13 @@ export default function Navigation(props: Props) {
         eiweiss: ''
     });
 
-    // Funktion zum Bearbeiten der Formulardaten
+    const openAddModal = () => setIsAddModalOpen(true);
+    const closeAddModal = () => setIsAddModalOpen(false);
+
+    const isFilled = (fieldName: FormField) => {
+        return formData[fieldName]?.trim() !== '' && focusedField !== fieldName;
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData((prevState) => ({
@@ -54,7 +64,6 @@ export default function Navigation(props: Props) {
         }));
     };
 
-    // Funktion zum Speichern des neuen Objekts
     const handleCreateObject = async () => {
         const cleanedFormData = Object.fromEntries(
             Object.entries(formData).map(([key, value]) => [
@@ -64,12 +73,9 @@ export default function Navigation(props: Props) {
         );
 
         try {
-            const response = await axios.post("/api/nutri", cleanedFormData, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
+            await axios.post("/api/nutri", cleanedFormData, {
+                headers: { "Content-Type": "application/json" }
             });
-            console.log("Erfolgreich gespeichert:", response.data);
 
             setFormData({
                 barcode: '',
@@ -97,17 +103,17 @@ export default function Navigation(props: Props) {
         <>
         <div className="nav-container-wrapper">
             <div className="header-container">
-            <h1 style={{ fontFamily: 'Dancing Script, cursive', fontSize: '4rem', color: 'white' }}>
+                <h1 style={{ fontFamily: 'Dancing Script, cursive', fontSize: '4rem', color: 'white' }}>
                 Get Your Nutri - einkaufen, ernähren, Fitness
-            </h1>
+                </h1>
             </div>
-            <div className="nav-container">
 
+            <div className="nav-container">
                 <LogoutButton />
 
-            <div className="radio-container">
+                <div className="radio-container">
 
-                {/* Radiobuttons für Sortieroptionen */}
+                {/* Radiobuttons für Layoutoptionen */}
                     <input
                         type="radio"
                         name="sortOption"
@@ -160,7 +166,7 @@ export default function Navigation(props: Props) {
                 <div>
                     <div className="neues-objekt-navigation-container">
                     <button onClick={openAddModal} className="neues-objekt-button">
-                        <FontAwesomeIcon icon={faFileLines} />{/* Zeigt den nach unten gerichteten Pfeil */}
+                        <FontAwesomeIcon icon={faFileLines} />
                     </button>
                         <div className="neues-objekt-text">
                     <p>Neues Objekt erstellen</p>
@@ -209,11 +215,11 @@ export default function Navigation(props: Props) {
                                                 key={field}
                                                 type="text"
                                                 name={field}
-                                                value={formData[field]}
+                                                value={formData[field as FormField]}
                                                 onChange={handleChange}
-                                                onFocus={() => setFocusedField(field)}
+                                                onFocus={() => setFocusedField(field as FormField)}
                                                 onBlur={() => setFocusedField('')}
-                                                className={isFilled(field) ? 'filled' : ''}
+                                                className={isFilled(field as FormField) ? 'filled' : ''}
                                             />
                                         ))}
                                     </div>

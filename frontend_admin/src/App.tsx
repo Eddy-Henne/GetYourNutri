@@ -19,87 +19,89 @@ function App() {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [papierkorbCount, setPapierkorbCount] = useState<number>(0);
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
 
-    //              Items laden und aktualisieren
-
-
-
+    // =======================
+    // Nutzer-Session prüfen
+    // =======================
     useEffect(() => {
         axios.get("/api/users/me", { withCredentials: true })
             .then(response => {
-                if (response.data?.username) {
-                    console.log("Angemeldet als:", response.data.username);
-                    setIsLoggedIn(true);
-                } else {
-                    console.log("Kein Username gefunden – redirect");
+                if (!response.data?.username) {
                     navigate("/login");
                 }
             })
-            .catch((error) => {
-                console.log("Nicht eingeloggt oder Session abgelaufen – redirect", error);
+            .catch(() => {
                 navigate("/login");
             });
     }, [navigate]);
 
+    // =======================
+    // Daten abrufen (Haupt-Datenbank)
+    // =======================
     const fetchNutris = () => {
         setIsLoading(true);
-        const minLoadingTime = new Promise(resolve => setTimeout(resolve, 800));
 
+        const minLoadingTime = new Promise(resolve => setTimeout(resolve, 800));
         const dataFetch = axios.get("/api/nutri", { withCredentials: true })
             .then(response => {
                 setNutriDatabases(response.data);
             })
-            .catch((error) => {
-                console.error('Fehler beim Laden der Daten:', error);
-            })
+            .catch(() => {
+                // Fehlerbehandlung: optional Logging-System hier einsetzen
+            });
             Promise.all([minLoadingTime, dataFetch]).then(() => {
                 setIsLoading(false);
         });
     };
 
+    // =======================
+    // Papierkorb-Daten zählen
+    // =======================
     const fetchPapierkorbCount = () => {
         axios.get("/api/papierkorb", { withCredentials: true })
             .then(response => {
-                console.log("Papierkorb-Daten:", response.data);
                 setPapierkorbCount(response.data.length);
             })
-            .catch(error => {
-                console.error("Fehler beim Laden des Papierkorb-Counts:", error);
+            .catch(() => {
+                // Fehlerbehandlung optional
             });
     };
 
-    //                  Initiales Laden der Items
-
+    // =======================
+    // Initiale Daten-Ladungen
+    // =======================
     useEffect(() => {
         fetchNutris();
-    }, []);
-
-    useEffect(() => {
         fetchPapierkorbCount();
     }, []);
 
+    // =======================
+    // Kategorien + Filterung
+    // =======================
+    const categories = Array.from(new Set(nutriDatabases.map(item => item.kategorie)));
+
+    const filteredNutriDatabases = nutriDatabases.filter(item => {
+        if (selectedCategory && item.kategorie !== selectedCategory) return false;
+        const lowerSearch = searchTerm.toLowerCase();
+        return (
+            item.name.toLowerCase().includes(lowerSearch) ||
+            item.kategorie.toLowerCase().includes(lowerSearch) ||
+            item.barcode.includes(searchTerm)
+        );
+    });
+
+    // =======================
+    // Ladeanzeige
+    // =======================
     if (nutriDatabases.length === 0) {
         return "Lade...";
     }
-
-    const categories = nutriDatabases.length > 0
-        ? Array.from(new Set(nutriDatabases.map(item => item.kategorie)))
-        : [];
-
-    const filteredNutriDatabases = nutriDatabases
-        .filter(item => {
-            if (selectedCategory && item.kategorie !== selectedCategory) return false;
-            return !(!item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                !item.kategorie.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                !item.barcode.includes(searchTerm));
-        })
 
     return(
     <Routes>
         <Route path={"/"} element={
             <>
-                <PapierkorbButton count={papierkorbCount} onClick={() => console.log("Papierkorb öffnen")} />
+                <PapierkorbButton count={papierkorbCount} onClick={() => {}} />
 
                 <Navigation
                 categories={categories}
@@ -130,10 +132,8 @@ function App() {
         }/>
         <Route path={"/login"} element={<LoginPage/>}/>
         <Route path={"/register"} element={<RegisterPage/>}/>
-
     </Routes>
-
-            );
+    );
 }
 
 export default App

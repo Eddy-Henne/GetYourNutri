@@ -54,7 +54,7 @@ export default function PapierkorbModal({ isOpen, onClose, onRestore }: Props) {
 
     const handleClose = async () => {
         if (entriesToDelete.length > 0) {
-            // Nur wenn etwas markiert wurde, löschen & aktualisieren
+            // Nur wenn etwas verändert wurde, löschen & aktualisieren
             for (const id of entriesToDelete) {
                 await fetch(`/api/papierkorb/${id}`, { method: "DELETE" });
             }
@@ -73,6 +73,7 @@ export default function PapierkorbModal({ isOpen, onClose, onRestore }: Props) {
     return (
         <div className="modal-overlay-papierkorb">
             <div className="modal-wrapper">
+
                 {/* Linke Spalte */}
                 <div className="modal-content-papierkorb modal-left">
                     <h2 className="modal-title">Papierkorb</h2>
@@ -115,6 +116,7 @@ export default function PapierkorbModal({ isOpen, onClose, onRestore }: Props) {
                 </div>
 
                 {/* Rechte Spalte */}
+
                 <div className="modal-content-papierkorb modal-right">
                     <h2 className="modal-title">Details</h2>
                     {selectedEntry ? (

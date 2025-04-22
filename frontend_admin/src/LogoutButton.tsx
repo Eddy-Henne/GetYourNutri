@@ -8,7 +8,7 @@ export default function LogoutButton() {
     function handleLogout() {
         axios.post("/api/users/logout", { withCredentials: true })
             .then(() => {
-                navigate("/login"); // oder wohin du den Nutzer schicken willst
+                navigate("/login");
             })
             .catch((e) => console.error("Logout fehlgeschlagen", e));
     }

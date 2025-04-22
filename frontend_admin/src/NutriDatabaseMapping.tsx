@@ -13,11 +13,11 @@ type Props = {
 };
 
 export default function NutriDatabaseMapping(props: Props) {
-
     const [isPapierkorbOpen, setIsPapierkorbOpen] = useState(false);
 
     return(
         <>
+            {/* Hauptcontainer für Tebellen-Darstellung */}
             <div className="container">
                 {props.selectedView === "Tabelle" && (
                     props.filteredNutriDatabases.map((nutriItem) => (
@@ -28,11 +28,12 @@ export default function NutriDatabaseMapping(props: Props) {
                             reloadData={props.reloadData}
                             onPapierkorbUpdate={props.refreshPapierkorb}
                             nutriList={props.filteredNutriDatabases}
-                            onSelect={(nutri) => console.log("Ausgewählt:", nutri.name)}
+                            onSelect={() => {}}
                         />
                     ))
                 )}
 
+                {/* Hauptcontainer für Karussell-Darstellung */}
                 {props.selectedView === "Rad" && (
                     // 👉 Hier nur **einmal** das Rad mit allen Items
                     <NutriDatabaseCard
@@ -41,32 +42,29 @@ export default function NutriDatabaseMapping(props: Props) {
                         reloadData={props.reloadData}
                         onPapierkorbUpdate={props.refreshPapierkorb}
                         nutriList={props.filteredNutriDatabases}
-                        onSelect={(nutri) => {
-                            if (nutri) {
-                                console.log("Ausgewählt:", nutri.name);
-                            } else {
-                                console.warn("⚠️ Kein nutri-Objekt übergeben!");
-                            }
-                        }}
+                        onSelect={() => {}}
                     />
                 )}
             </div>
 
+            {/* Papierkorb-Bereich mit Button und Modal */}
             <div className="flex items-center gap-4">
-
-                <PapierkorbButton onClick={() => setIsPapierkorbOpen(true)} count={props.papierkorbCount} />
+                <PapierkorbButton
+                    onClick={() => setIsPapierkorbOpen(true)}
+                    count={props.papierkorbCount}
+                />
 
                 <PapierkorbModal
                     isOpen={isPapierkorbOpen}
                     onClose={() => setIsPapierkorbOpen(false)}
                     onRestore={() => {
-                        // Aktualisieren der Listen
+                        // Nach Wiederherstellung Liste und Zähler aktualisieren
                         setIsPapierkorbOpen(false);
                         props.reloadData();
                         props.refreshPapierkorb();
                     }}
                 />
-                </div>
+            </div>
         </>
     )
 }

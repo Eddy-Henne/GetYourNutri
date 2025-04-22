@@ -20,7 +20,7 @@ export default function LoginPage() {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            withCredentials: true // ← wichtig für Session-Cookie
+            withCredentials: true // wichtig für Session-Cookie
         })
             .then(() => {
                 setPassword("");

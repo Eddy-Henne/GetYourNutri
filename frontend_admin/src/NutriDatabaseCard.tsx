@@ -6,7 +6,6 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faFileLines} from '@fortawesome/free-solid-svg-icons';
 import './styles/NutriDatabaseRadView.css';
 
-
 type Props = {
     selectedView: 'Tabelle' | 'Rad';
     nutriDatabase: NutriDatabase;
@@ -22,16 +21,17 @@ export default function NutriDatabaseCard(props: Props) {
     const [editedNutri, setEditedNutri] = useState(props.nutriDatabase);
     const [inputField, setInputField] = useState(false);
     const [editingField, setEditingField] = useState<string | null>(null);
-    const [isFocused, setIsFocused] = useState(false);
-
     const [activeIndex, setActiveIndex] = useState(0);
+
     const containerRef = useRef<HTMLDivElement>(null);
 
+    // Karussell-Parameter für Anzahl sichtbarer Objekte
     const visibleCount = 7;
     const offset = Math.floor(visibleCount / 2);
 
+    // Pause zwischen Scrolls, Delay in Millisekunden
     const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
-    const scrollDelay = 100; // Millisekunden Pause zwischen Scrolls
+    const scrollDelay = 100;
 
     const getWrappedIndex = (index: number) => {
         return (index + props.nutriList.length) % props.nutriList.length;
@@ -42,13 +42,15 @@ export default function NutriDatabaseCard(props: Props) {
         return props.nutriList[index];
     });
 
+    const { nutriList, onSelect } = props;
     useEffect(() => {
-        const selected = props.nutriList[activeIndex];
+        const selected = nutriList[activeIndex];
         if (selected) {
             props.onSelect(selected);
         }
-    }, [activeIndex, props.nutriList, props.onSelect]);
+    }, [activeIndex, nutriList, onSelect, props]);
 
+    // Stellt Daten zur Verfügung in Abhängigkeit davon, ob das Layout Tabelle oder Rad aktiv ist
     useEffect(() => {
         if (props.selectedView === 'Tabelle' && props.nutriDatabase) {
             setEditedNutri(props.nutriDatabase);
@@ -58,10 +60,9 @@ export default function NutriDatabaseCard(props: Props) {
         }
     }, [props.nutriDatabase, props.nutriList, activeIndex, props.selectedView]);
 
+    // Stelle sicher, dass der Index innerhalb der Liste bleibt
     useEffect(() => {
-        if (props.nutriList.length === 0) return; // keine Daten = kein Index
-
-        if (activeIndex >= props.nutriList.length) {
+        if (props.nutriList.length && activeIndex >= props.nutriList.length) {
             setActiveIndex(0);
         }
     }, [props.nutriList, activeIndex]);
@@ -93,16 +94,9 @@ export default function NutriDatabaseCard(props: Props) {
 
     const handleSaveClick = async () => {
         try {
-            const response = await axios.put(
-                `/api/nutri/${editedNutri.id}`,
-                editedNutri,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-            console.log('Update erfolgreich:', response.data);
+             await axios.put(`/api/nutri/${editedNutri.id}`, editedNutri, {
+                    headers: {'Content-Type': 'application/json'}
+                });
             props.reloadData();
             closeInputField();
         } catch (error) {
@@ -111,15 +105,12 @@ export default function NutriDatabaseCard(props: Props) {
     };
 
     const handleDeleteClick = async () => {
-        console.log("🗑 Löschen wurde ausgelöst!");
         try {
-            const idToDelete =
-                props.selectedView === 'Rad'
+            const idToDelete = props.selectedView === 'Rad'
                     ? props.nutriList[activeIndex].id
                     : props.nutriDatabase.id;
 
             await axios.delete(`/api/nutri/${idToDelete}`);
-
             props.reloadData();
             props.onPapierkorbUpdate();
 
@@ -129,7 +120,6 @@ export default function NutriDatabaseCard(props: Props) {
             } else {
                 closeInputField();
             }
-
         } catch (error) {
             console.error("Fehler beim Löschen:", error);
         }
@@ -142,7 +132,6 @@ export default function NutriDatabaseCard(props: Props) {
         });
     };
     const handleFocus = (field: keyof NutriDatabase) => {
-        setIsFocused(true);
         setEditedNutri((prev) => ({
             ...prev,
             [field]: "" // Nur das fokussierte Feld leeren
@@ -150,8 +139,6 @@ export default function NutriDatabaseCard(props: Props) {
     };
 
     const handleBlur = (field: keyof NutriDatabase) => {
-        setIsFocused(false);
-
         const original = props.selectedView === "Tabelle"
             ? props.nutriDatabase[field]
             : props.nutriList[activeIndex][field];
@@ -163,14 +150,8 @@ export default function NutriDatabaseCard(props: Props) {
             }));
         }
     };
-
-    // Karussell
     
-
-
-    // 🌀 Aktualisiere lokale Liste, wenn neue Props kommen
-    
-    // ⌨️ Tastaturnavigation
+    // Tastatursteuerung für Karussell
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === "ArrowUp") {
@@ -179,13 +160,12 @@ export default function NutriDatabaseCard(props: Props) {
                 setActiveIndex((prev) => getWrappedIndex(prev + 1));
             }
         };
-
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [props.nutriList.length]);
 
 
-    // 🖱 Mousewheel Scroll zirkulär
+    // Maus-Rad-Steuerung für das Karussell
     const handleWheel = (e: React.WheelEvent) => {
         e.preventDefault();
         if (scrollTimeout.current) return; // noch im Cooldown

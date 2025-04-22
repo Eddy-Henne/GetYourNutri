@@ -7,7 +7,6 @@ import trashS4 from './assets/images/trashS4.png';
 interface Props {
     count: number;
     onClick: () => void;
-
 }
 
 export default function PapierkorbButton({ count, onClick }: Props) {
