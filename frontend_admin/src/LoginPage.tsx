@@ -6,6 +6,7 @@ import './styles/LoginPage.css';
 export default function LoginPage() {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const navigate = useNavigate();
 
     function handleLogin(event: FormEvent<HTMLFormElement>) {
@@ -24,11 +25,16 @@ export default function LoginPage() {
             .then(() => {
                 setPassword("");
                 setUsername("");
+                setErrorMessage(null);
                 navigate("/");
             })
             .catch(e => {
                 setPassword("");
-                console.error(e)
+                if (e.response && e.response.status === 401) {
+                    setErrorMessage("Benutzername oder Passwort ist falsch.");
+                } else {
+                    setErrorMessage("Ein Fehler ist aufgetreten. Bitte versuche es später noch einmal.");
+                }
             });
     }
 
@@ -54,6 +60,7 @@ export default function LoginPage() {
                 />
                 <button className="login-button">Login</button>
             </form>
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
         </div>
         </div>
     );

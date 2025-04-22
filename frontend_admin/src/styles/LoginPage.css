@@ -62,3 +62,11 @@
     background-color: #cccccc;
     cursor: not-allowed;
 }
+
+/* Fehlermeldung */
+.error-message {
+    color: #040719;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
