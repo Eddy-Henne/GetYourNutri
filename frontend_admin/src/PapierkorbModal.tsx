@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "@/styles/papierkorbModal.css"; // <- dein CSS kommt dort rein
+import "@/styles/papierkorbModal.css";
 import './styles/papierkorbModal.css';
 
 interface PapierkorbNutri {
@@ -27,6 +27,7 @@ interface Props {
 export default function PapierkorbModal({ isOpen, onClose, onRestore }: Props) {
     const [entries, setEntries] = useState<PapierkorbNutri[]>([]);
     const [entriesToDelete, setEntriesToDelete] = useState<string[]>([]);
+    const [selectedEntry, setSelectedEntry] = useState<PapierkorbNutri | null>(null);
 
     useEffect(() => {
         if (isOpen) {
@@ -63,6 +64,9 @@ export default function PapierkorbModal({ isOpen, onClose, onRestore }: Props) {
         onClose(); // Modal schließen – unabhängig davon
     };
 
+    const showDetails = (entry: PapierkorbNutri) => {
+        setSelectedEntry(entry);
+    };
 
     if (!isOpen) return null;
 
@@ -98,24 +102,55 @@ export default function PapierkorbModal({ isOpen, onClose, onRestore }: Props) {
                                             </button>
                                             <button
                                                 className="papierkorb-detail-button"
-                                                onClick={() => console.log("Details für:", entry.name)}
+                                                onClick={() => showDetails(entry)}
                                             >
                                                 i
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-
-
                             ))}
                         </div>
                     )}
                 </div>
 
-                {/* Rechte Spalte (wird später mit Details befüllt) */}
-                <div className="modal-content modal-right">
+                {/* Rechte Spalte */}
+                <div className="modal-content-papierkorb modal-right">
                     <h2 className="modal-title">Details</h2>
-                    {/* Noch leer – kommt im nächsten Schritt */}
+                    {selectedEntry ? (
+                        <div className="details-grid">
+                            <div className="edit-modal-labels-papierkorb">
+                                <p><strong>Barcode</strong></p>
+                                <p><strong>Name</strong></p>
+                                <p><strong>Marke</strong></p>
+                                <p><strong>Supermarkt</strong></p>
+                                <p><strong>Kategorie</strong></p>
+                                <p><strong>Essbar</strong></p>
+                                <p><strong>Energie</strong></p>
+                                <p><strong>Fett</strong></p>
+                                <p><strong>Fettsäuren</strong></p>
+                                <p><strong>Kohlenhydrate</strong></p>
+                                <p><strong>Zucker</strong></p>
+                                <p><strong>Eiweiß</strong></p>
+                            </div>
+                            <div className="edit-modal-values-papierkorb">
+                                <p>{selectedEntry.barcode}</p>
+                                <p>{selectedEntry.name}</p>
+                                <p>{selectedEntry.marke}</p>
+                                <p>{selectedEntry.supermarkt}</p>
+                                <p>{selectedEntry.kategorie}</p>
+                                <p>{selectedEntry.essbar}</p>
+                                <p>{selectedEntry.energie}</p>
+                                <p>{selectedEntry.fett}</p>
+                                <p>{selectedEntry.fettsaeuren}</p>
+                                <p>{selectedEntry.kohlenhydrate}</p>
+                                <p>{selectedEntry.zucker}</p>
+                                <p>{selectedEntry.eiweiss}</p>
+                            </div>
+                        </div>
+                    ) : (
+                        <p className="text-gray-500">Keine Details ausgewählt.</p>
+                    )}
                 </div>
             </div>
         </div>

@@ -3,13 +3,15 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import Navigation from "./Navigation.tsx";
 import './index.css';
-import {Route, Routes} from "react-router-dom";
+import {Navigate, Route, Routes} from "react-router-dom";
 import NutriDatabaseMapping from "./NutriDatabaseMapping.tsx";
 import LoginPage from "./LoginPage.tsx";
 import RegisterPage from "./RegisterPage.tsx";
 import PapierkorbButton from "./PapierkorbButton.tsx";
+import { useNavigate } from "react-router-dom";
 
 function App() {
+    const navigate = useNavigate();
 
     const [nutriDatabases, setNutriDatabases] = useState<NutriDatabase[]>([]);
     const [selectedView, setSelectedView] = useState<'Tabelle' | 'Rad'>('Tabelle');
@@ -17,14 +19,34 @@ function App() {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [papierkorbCount, setPapierkorbCount] = useState<number>(0);
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
 
     //              Items laden und aktualisieren
+
+
+
+    useEffect(() => {
+        axios.get("/api/users/me", { withCredentials: true })
+            .then(response => {
+                if (response.data?.username) {
+                    console.log("Angemeldet als:", response.data.username);
+                    setIsLoggedIn(true);
+                } else {
+                    console.log("Kein Username gefunden – redirect");
+                    navigate("/login");
+                }
+            })
+            .catch((error) => {
+                console.log("Nicht eingeloggt oder Session abgelaufen – redirect", error);
+                navigate("/login");
+            });
+    }, [navigate]);
 
     const fetchNutris = () => {
         setIsLoading(true);
         const minLoadingTime = new Promise(resolve => setTimeout(resolve, 800));
 
-        const dataFetch = axios.get("/api/nutri")
+        const dataFetch = axios.get("/api/nutri", { withCredentials: true })
             .then(response => {
                 setNutriDatabases(response.data);
             })
@@ -37,7 +59,7 @@ function App() {
     };
 
     const fetchPapierkorbCount = () => {
-        axios.get("/api/papierkorb")
+        axios.get("/api/papierkorb", { withCredentials: true })
             .then(response => {
                 console.log("Papierkorb-Daten:", response.data);
                 setPapierkorbCount(response.data.length);
@@ -60,6 +82,9 @@ function App() {
     if (nutriDatabases.length === 0) {
         return "Lade...";
     }
+
+
+
 
     const categories = nutriDatabases.length > 0
         ? Array.from(new Set(nutriDatabases.map(item => item.kategorie)))

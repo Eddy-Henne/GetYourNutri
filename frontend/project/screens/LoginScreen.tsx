@@ -44,7 +44,7 @@ function LoginScreen() {
 
     async function handleLogin(username: string, password: string) {
         if (!username || !password) {
-            setError("Username und Password sind erforderlich.");
+            setError("Username und Passwort sind erforderlich.");
             return;
         }
         try {

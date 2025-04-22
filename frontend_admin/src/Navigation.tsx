@@ -4,6 +4,7 @@ import {useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFileLines} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import LogoutButton from './LogoutButton';
 
 
 type Props = {
@@ -101,6 +102,8 @@ export default function Navigation(props: Props) {
             </h1>
             </div>
             <div className="nav-container">
+
+                <LogoutButton />
 
             <div className="radio-container">
 

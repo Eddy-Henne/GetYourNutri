@@ -389,6 +389,27 @@ select:focus {
   outline: none;
 }
 
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #ffdddd;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-weight: bold;
+}
+
+.logout-button:hover {
+  background-color: #ffbbbb;
+}
+
+.logout-icon {
+  color: #d00000;
+}
+
 /* Headerbereich */
 .nav-container-wrapper {
   background-image: url('/images/header-background.png');  /* Pfad zum Bild im public Ordner */
