@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import Navigation from "./Navigation.tsx";
 import './index.css';
-import {Navigate, Route, Routes} from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 import NutriDatabaseMapping from "./NutriDatabaseMapping.tsx";
 import LoginPage from "./LoginPage.tsx";
 import RegisterPage from "./RegisterPage.tsx";
@@ -82,9 +82,6 @@ function App() {
     if (nutriDatabases.length === 0) {
         return "Lade...";
     }
-
-
-
 
     const categories = nutriDatabases.length > 0
         ? Array.from(new Set(nutriDatabases.map(item => item.kategorie)))
